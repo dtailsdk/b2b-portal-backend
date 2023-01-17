@@ -1,15 +1,16 @@
 import { Server } from '@mekanisme/server'
 import { ShopifyToken } from 'models'
+import { getTheProducts } from '../lib/products'
 
 //Service that does not require authorization used to decide whether to start OAuth flow for shops where app is not installed yet
 async function getShop(req, res) {
   const dbShopName = req.query.shop.replace('.myshopify.com', '')
-  const shop = await ShopifyToken.q.where({ shop: dbShopName }).first()
+  const shop = await ShopifyToken.query().withGraphJoined('app').findOne({ shop: dbShopName, identifier: req.query.app, uninstalledAt: null })
   return res.send({
     shop: {
       name: dbShopName
     },
-    appInstalled: typeof shop !== 'undefined'
+    appInstalled: (shop && shop.uninstalledAt == null) ? true : false
   })
 }
 
@@ -22,6 +23,12 @@ async function needsAuth(req, res) {
     },
     appInstalled: typeof shop !== 'undefined'
   })
+}
+
+async function getProducts(req, res) {
+  const shop = req.shopFromToken
+  const products = await getTheProducts(shop)
+  return res.send(products)
 }
 
 async function ping(req, res) {
@@ -40,6 +47,11 @@ export default function init(shopifyOAuth) {
   router
     .route('/needs_auth')
     .get(shopifyOAuth.withAuthorizedShop(), needsAuth)
+    .all(Server.middleware.methodNotAllowed)
+
+  router
+    .route('/products')
+    .get(shopifyOAuth.withAuthorizedShop(), getProducts)
     .all(Server.middleware.methodNotAllowed)
 
   router

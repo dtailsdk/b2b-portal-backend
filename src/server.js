@@ -1,17 +1,16 @@
 import { Server, Model, ShopifyOAuth } from '@mekanisme/server'
 import { getEnvironment } from '@mekanisme/server/lib'
-import {
-  ShopifyToken
-} from 'models'
-import uuidv4 from 'uuid/v4'
+import { App, ShopifyToken } from 'models'
+import { validateWebhooks } from './lib/webhooks'
+import controllers from 'controllers'
 
-Server.init({ 
+Server.init({
   withCors: true,
   credentials: true,
-  corsBlacklist: ['/', '/app/shopify/auth/confirm', '/app/webhooks/app_uninstalled', '/app/webhooks/customers_redact',  '/app/webhooks/customers_data_request',  '/app/webhooks/shop_redact', '/favicon.ico'],
+  corsBlacklist: ['/', '/app/shopify/auth/confirm', '/app/webhooks/app_uninstalled', '/app/webhooks/customers_redact', '/app/webhooks/customers_data_request', '/app/webhooks/shop_redact', '/favicon.ico'],
   bodyParser: {
     parseRawBody: true,
-    rawBodyUrls: ['/app/webhooks/app_uninstalled', '/app/webhooks/shop_redact', '/app/webhooks/customers_redact',  '/app/webhooks/customers_data_request', '/settings'],
+    rawBodyUrls: ['/app/webhooks/app_uninstalled', '/app/webhooks/shop_redact', '/app/webhooks/customers_redact', '/app/webhooks/customers_data_request'],
     type: ['text/plain', 'application/json']
   }
 })
@@ -19,36 +18,44 @@ Server.init({
 const knex_debug_mode = getEnvironment('KNEX_DEBUG_MODE') === 'true'
 Server.initModel(Model, { debug: knex_debug_mode })
 
-//Shopify GraphQL bug requires write_orders for webhooks ORDER_CREATED etc.
-const shopifyOAuth = new ShopifyOAuth({
-  key: getEnvironment('SHOPIFY_APP_KEY'),
-  secret: getEnvironment('SHOPIFY_APP_SECRET'),
-  tokenModel: ShopifyToken,
-  knex_debug_mode,
-  models: [],
-  tenant_migrations: [],
-  scope: [
-    'read_products',
-    'write_products',
-  ],
-  embedded: true,
-  create_additional_token_data: token => ({ ...token, shoptimist_api_key: uuidv4() }),
-})
+const createAdditionalTokenData = async (tokenData, appIdentifier) => {
+  const app = await App.query().findOne({ identifier: appIdentifier })
+  tokenData.app_id = app.id
+  return tokenData
+}
 
-shopifyOAuth.mount(Server, { redirectRoute: '/' })
+App.query().then(
+  (apps) => {
+    const appsConfiguration = {}
+    for (const app of apps) {
+      appsConfiguration[app.identifier] = app
+    }
+    const shopifyOAuth = new ShopifyOAuth({
+      key: null,
+      secret: null,
+      multipleApps: appsConfiguration,
+      tokenModel: ShopifyToken,
+      knex_debug_mode,
+      models: [],
+      tenant_migrations: [],
+      scope: [
+        'read_products',
+      ],
+      embedded: true,
+      create_additional_token_data: createAdditionalTokenData,
+      onShopInstalled: (shop, app) => { console.log('App was installed - registering webhooks for shop ' + shop.shop + ' and app "' + app); validateWebhooks(shop, app) },
+      get_shop_by_name: async (req, shopName) => {
+        const app = await App.query().findOne({ identifier: req.query.app })
+        return await ShopifyToken.query().findOne({ shop: shopName, app_id: app.id }).whereNull('uninstalledAt')
+      }
+    })
 
-//Do not do anything restricted here, as shop is only a query parameter (i.e. can be set by unauthorized users)
-Server.get('/', async (req, res) => {
-  console.log('Redirect from confirm step of OAuth flow for shop', req.query.shop)
-  res.redirect(302, 'https://' + req.query.shop + '.myshopify.com/admin/apps/' + getEnvironment('SHOPIFY_APP_NAME'))
-})
+    shopifyOAuth.mount(Server, { redirectRoute: '/app' })
 
-import controllers from 'controllers'
-controllers(shopifyOAuth)
+    controllers(shopifyOAuth)
 
-Server.listen()
-
-Server.useNotFound()
-Server.useErrorHandler()
-
-//TODO Enable Sentry via Raven
+    Server.listen()
+    Server.useNotFound()
+    Server.useErrorHandler()
+  }
+)

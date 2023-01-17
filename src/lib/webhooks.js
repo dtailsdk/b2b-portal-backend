@@ -5,10 +5,10 @@ import { createWebhook, getWebhooks } from './shopify-api/webhooks'
 import { getApiConnection } from './shopify-api/stores'
 import { sendSupportErrorMail } from './mail'
 
-export async function validateWebhooks(shop) {
+export async function validateWebhooks(shop, app) {
   try {
     const appWebhooks = [
-      { topic: 'APP_UNINSTALLED', webhookSubscription: { callbackUrl: getEnvironment('SERVER_URL') + '/app/webhooks/app_uninstalled' } },
+      { topic: 'APP_UNINSTALLED', webhookSubscription: { callbackUrl: getEnvironment('SERVER_URL') + '/app/webhooks/app_uninstalled?app=' + app } }
     ]
 
     const shopifyApi = getApiConnection(shop)
@@ -19,18 +19,18 @@ export async function validateWebhooks(shop) {
         const webhook = webhooks[j].node
 
         if (webhook.topic == appWebhooks[i].topic) {
-          console.log('Webhook with topic ' + appWebhooks[i].topic + ' was already installed')
+          console.log(`Webhook with topic ${appWebhooks[i].topic} was already installed`)
           webhookIsCreated = true
           break
         }
       }
       if (!webhookIsCreated) {
-        console.log('Webhook with topic ' + appWebhooks[i].topic + ' was not installed - going to reinstall webhook')
+        console.log(`Webhook with topic ${appWebhooks[i].topic} was not installed - going to reinstall webhook`)
         await createWebhook(shopifyApi, appWebhooks[i])
       }
     }
   } catch (e) {
-    await sendSupportErrorMail('Cannot validate and/or create webhook for shop ' + shop.shop + ' - got error message ' + e.message)
+    console.error('Cannot validate and/or create webhook for shop ' + shop.shop + ' - got error message ' + e.message)
   }
 }
 
@@ -50,12 +50,12 @@ export function verifyShopifyWebhook(secret, req, body) {
  * Validates webhooks for all installed shops
  */
 export async function validateAllWebhooks() {
-  const shops = await ShopifyToken.q
+  const shops = await ShopifyToken.q.withGraphFetched('app')
   for (let i = 0; i < shops.length; i++) {
     const shop = shops[i]
     console.log('Going to validate webhooks for shop ' + shop.shop)
     try {
-      await validateWebhooks(shop)
+      await validateWebhooks(shop, shop.app)
     } catch (e) {
       console.log(e)
       await sendSupportErrorMail('Cannot validate webhook for shop ' + shop.shop + ' - got error message ' + e.message)
