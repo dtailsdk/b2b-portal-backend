@@ -1,0 +1,1 @@
+This repository is the backend for the custom Shopify app for the dtails B2B portal.

@@ -1,0 +1,56 @@
+{
+  "name": "b2b-portal-backend",
+  "version": "0.0.1",
+  "description": "The backend for the dtails B2B portal",
+  "scripts": {
+    "dev": "nodemon --watch .env --watch knexfile.js --watch .babelrc --watch package.json --watch src src/server.js --exec babel-node",
+    "build": "babel src -d dist",
+    "validate-webhooks-job": "npm run build && NODE_ENV=production node dist/scheduled-tasks/validate-webhooks-job.js",
+    "migrate:latest": "babel-node ./node_modules/.bin/knex migrate:latest",
+    "migrate:rollback": "babel-node ./node_modules/.bin/knex migrate:rollback",
+    "migrate:make": "babel-node ./node_modules/.bin/knex migrate:make",
+    "seed:run": "babel-node ./node_modules/.bin/knex seed:run",
+    "seed:make": "babel-node ./node_modules/.bin/knex seed:make",
+    "start-web": "npm run build && NODE_ENV=production node dist/server.js",
+    "start-task": "npm run build && NODE_ENV=production node dist/task.js",
+    "db:create": "createdb app_template",
+    "db:drop": "dropdb app_template",
+    "db:reset": "npm-run-all db:drop db:create migrate:latest seed:run",
+    "test": "ava --watch | tap-difflet",
+    "testonce": "ava | tap-difflet"
+  },
+  "ava": {
+    "sources": "src/**/*.js",
+    "files": "test/**/*.js",
+    "tap": true,
+    "require": "babel-register",
+    "babel": {
+      "testOptions": {
+        "babelrc": false,
+        "configFile": false
+      }
+    }
+  },
+  "author": "dtails Sysadmin",
+  "license": "ISC",
+  "dependencies": {
+    "@mekanisme/server": "^3.0.1",
+    "@mekanisme/shopify-api": "2.2.0",
+    "babel-cli": "6.26.0",
+    "babel-plugin-module-resolver": "2.7.1",
+    "babel-plugin-syntax-class-properties": "6.13.0",
+    "babel-plugin-transform-class-properties": "6.24.1",
+    "babel-plugin-transform-object-rest-spread": "6.26.0",
+    "babel-preset-env": "1.6.0",
+    "crypto": "^1.0.1",
+    "moment": "^2.25.3",
+    "nodemailer": "^6.4.6",
+    "nodemailer-postmark-transport": "^3.0.0",
+    "uuid": "^7.0.3"
+  },
+  "devDependencies": {
+    "ava": "^1.2.0",
+    "nodemon": "1.11.0",
+    "tap-difflet": "^0.7.1"
+  }
+}
