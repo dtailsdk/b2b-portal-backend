@@ -1,6 +1,6 @@
 import { Server } from '@mekanisme/server'
 import { ShopifyToken } from 'models'
-import { getTheProducts } from '../lib/products'
+import { getTheProducts } from '../lib/product-service'
 
 //Service that does not require authorization used to decide whether to start OAuth flow for shops where app is not installed yet
 async function getShop(req, res) {

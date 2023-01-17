@@ -1,5 +1,5 @@
 import { Server, Model } from '@mekanisme/server'
-import { validateAllWebhooks } from '../lib/webhooks'
+import { validateAllWebhooks } from '../lib/webhook-service'
 
 Server.init({ withCors: false })
 Server.initModel(Model, { debug: false })

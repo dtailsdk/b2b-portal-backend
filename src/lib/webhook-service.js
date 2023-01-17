@@ -3,7 +3,7 @@ import { getEnvironment } from '@mekanisme/server/lib'
 import { ShopifyToken } from 'models'
 import { createWebhook, getWebhooks } from './shopify-api/webhooks'
 import { getApiConnection } from './shopify-api/stores'
-import { sendSupportErrorMail } from './mail'
+import { sendSupportErrorMail } from './mail-service'
 
 export async function validateWebhooks(shop, app) {
   try {
@@ -51,8 +51,7 @@ export function verifyShopifyWebhook(secret, req, body) {
  */
 export async function validateAllWebhooks() {
   const shops = await ShopifyToken.q.withGraphFetched('app')
-  for (let i = 0; i < shops.length; i++) {
-    const shop = shops[i]
+  for (const shop of shops) {
     console.log('Going to validate webhooks for shop ' + shop.shop)
     try {
       await validateWebhooks(shop, shop.app)

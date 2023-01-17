@@ -2,14 +2,9 @@ import nodemailer from 'nodemailer'
 import postmarkTransport from 'nodemailer-postmark-transport'
 import { getEnvironment } from '@mekanisme/server/lib'
 
-export async function sendSupportErrorMail(errorMessage) {
+export async function sendSupportMail(subject, textBody) {
   const toEmail = getEnvironment('SUPPORT_MAIL')
-  const textBody = 'An unexpected error occurred: ' + errorMessage
-  await sendMail(toEmail, 'An unexpected error occurred - action required', textBody, [])
-}
-
-export async function sendCustomerDataMail(contactMail) {
-  await sendMail(contactMail, 'TODO', 'TODO', null)
+  await sendMail(toEmail, subject, textBody, [])
 }
 
 async function sendMail(toEmail, subject, textBody, attachments) {
@@ -22,8 +17,8 @@ async function sendMail(toEmail, subject, textBody, attachments) {
   let mailSettings = {
     from: getEnvironment('POSTMARK_FROM_EMAIL'),
     to: toEmail,
-    subject: 'App template app: ' + subject,
-    text: textBody + '\r\n\r\nKind regards from the App Template app team',
+    subject: `${getEnvironment('ENVIRONMENT_PREFIX')}B2B portal: ${subject}`,
+    text: textBody + '\r\n\r\nKind regards from dtails',
     html: null,
     attachments: attachments
   }
@@ -32,7 +27,7 @@ async function sendMail(toEmail, subject, textBody, attachments) {
   if (result.messageId && result.rejected.length == 0) {
     return true
   } else {
-    console.log('Failed to send email')
-    return false
+    console.log('An error occurred while attempting to send mail', result)
+    throw Error('Failed to send email')
   }
 }

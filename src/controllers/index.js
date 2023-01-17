@@ -1,10 +1,10 @@
 import { Server } from '@mekanisme/server'
 
 import appsRouter from './apps-controller'
-import shopRouter from './shops'
-import webhooksRouter from './webhooks'
+import shopRouter from './shops-controller'
+import webhooksRouter from './webhooks-controller'
 
-import { validateAllWebhooks } from '../lib/webhooks'
+import { validateAllWebhooks } from '../lib/webhook-service'
 
 export default function init(shopifyOAuth) {
   Server.use('/app', appsRouter(shopifyOAuth))
