@@ -1,9 +1,10 @@
+import moment from 'moment'
 import { ShopifyToken } from 'models'
 
 export async function softDeleteShopData(shop) {
   if (shop != null) {
     console.log('Shop exists in DB - going to mark shop as deleted', shop)
-    await ShopifyToken.q.where({ id: shop.id }).update({uninstalledAt: Date.now()})
+    await ShopifyToken.q.where({ id: shop.id }).update({uninstalledAt: moment()})
   } else {
     console.log('Shop does not exist in DB')
   }

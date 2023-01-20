@@ -37,9 +37,9 @@ export async function validateWebhooks(shop, app) {
 export function verifyShopifyWebhook(secret, req, body) {
   try {
     var digest = crypto.createHmac('SHA256', secret)
-      .update(new Buffer.from(body, 'utf8'))
-      .digest('base64')
-    return digest === req.headers['x-shopify-hmac-sha256'];
+    .update(new Buffer.from(body, 'utf8'))
+    .digest('base64')
+    return digest === req.headers['x-shopify-hmac-sha256']
   } catch (error) {
     console.log(error, req.body)
     return false

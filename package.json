@@ -34,7 +34,7 @@
   "author": "dtails Sysadmin",
   "license": "ISC",
   "dependencies": {
-    "@mekanisme/server": "^3.0.1",
+    "@mekanisme/server": "^3.1.3",
     "@mekanisme/shopify-api": "2.2.0",
     "babel-cli": "6.26.0",
     "babel-plugin-module-resolver": "2.7.1",

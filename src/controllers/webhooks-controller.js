@@ -42,7 +42,6 @@ async function verifyWebhook(req, rawBody, appIdentifier) {
   const shop = await ShopifyToken.query().findOne({ shop: shopName, app_id: app.id }).whereNull('uninstalledAt')
   console.log('Verifying webhook', appIdentifier, app, shop)
   if (shop) {
-    shop.app_id = app.id
     if (!verifyShopifyWebhook(app.shopifyAppSecret, req, rawBody)) {
       throw new Error('Webhook was not verified for shop ' + shopName)
     }
