@@ -37,3 +37,12 @@ export async function getConfigurations() {
   }
   return configurations
 }
+
+export async function getConfigurationByApp(dbApp) {
+  return await getConfigurations()[dbApp.identifier]
+}
+
+export async function getConfigurationByShop(dbShop) {
+  const allConfigurations = await getConfigurations()
+  return allConfigurations[dbShop.app.identifier]
+}

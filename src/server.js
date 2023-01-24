@@ -1,17 +1,18 @@
 import { Server, Model, ShopifyOAuth } from '@dtails/toolbox'
 import { getEnvironment } from '@dtails/toolbox/lib'
+import { log } from '@dtails/logger'
 import { App, ShopifyToken } from 'models'
 import { validateWebhooks } from './lib/webhook-service'
+import { setConfigurationInShop } from './lib/shop-service'
 import controllers from './controllers'
-import { log } from '@dtails/logger'
 
 Server.init({
   withCors: true,
   credentials: true,
-  corsBlacklist: ['/', '/app/shopify/auth/confirm', '/app/webhooks/app_uninstalled', '/app/webhooks/customers_redact', '/app/webhooks/customers_data_request', '/app/webhooks/shop_redact', '/favicon.ico'],
+  corsBlacklist: ['/', '/app/api/shopify/auth/confirm', '/app/api/webhooks/app_uninstalled', '/app/api/webhooks/customers_redact', '/app/api/webhooks/customers_data_request', '/app/api/webhooks/shop_redact', '/favicon.ico'],
   bodyParser: {
     parseRawBody: true,
-    rawBodyUrls: ['/app/webhooks/app_uninstalled', '/app/webhooks/shop_redact', '/app/webhooks/customers_redact', '/app/webhooks/customers_data_request'],
+    rawBodyUrls: ['/app/api/webhooks/app_uninstalled', '/app/api/webhooks/shop_redact', '/app/api/webhooks/customers_redact', '/app/api/webhooks/customers_data_request'],
     type: ['text/plain', 'application/json']
   }
 })
@@ -46,7 +47,7 @@ App.query().then(
       ],
       embedded: true,
       create_additional_token_data: createAdditionalTokenData,
-      onShopInstalled: (shop, app) => { log('App was installed - registering webhooks for shop ' + shop.shop + ' and app "' + app); validateWebhooks(shop, app) },
+      onShopInstalled: (shop, app) => { log('App was installed - registering webhooks for shop ' + shop.shop + ' and app "' + app); validateWebhooks(shop, app); shop.app = app; setConfigurationInShop(shop) },
       get_shop_by_name: async (req, shopName) => {
         const app = await App.query().findOne({ identifier: req.query.app })
         return await ShopifyToken.query().findOne({ shop: shopName, app_id: app.id }).whereNull('uninstalledAt')

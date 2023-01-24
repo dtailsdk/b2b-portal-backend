@@ -7,7 +7,7 @@ import { ShopifyToken, App } from 'models'
 
 async function appUninstalled(req, res) {
   const shop = await verifyWebhook(req, req.rawBody, req.query.app)
-  log('On uninstall, DB shop is ', shop, req.headers['x-shopify-shop-domain'])
+  log(`On uninstall, DB shop is ${shop.shop}`, req.headers['x-shopify-shop-domain'])
   await softDeleteShopData(shop)
   Sentry.captureMessage(`dtails B2B portal app was uninstalled for shop ${shop.shop} - app data is soft deleted`)
   return res.sendStatus(200)

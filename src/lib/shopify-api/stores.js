@@ -8,3 +8,13 @@ export function getApiConnection(token) {
   })
   return shopify
 }
+
+export async function getShop(shopifyApi) {
+  const query = `{
+    shop{
+      id
+    }
+  }`
+  const result = await shopifyApi.graphql(query)
+  return result.shop
+}
