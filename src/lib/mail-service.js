@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer'
 import postmarkTransport from 'nodemailer-postmark-transport'
+import { log } from '@dtails/logger'
 import { getEnvironment } from '@dtails/toolbox/lib'
 
 export async function sendSupportMail(subject, textBody) {
@@ -27,7 +28,7 @@ async function sendMail(toEmail, subject, textBody, attachments) {
   if (result.messageId && result.rejected.length == 0) {
     return true
   } else {
-    console.log('An error occurred while attempting to send mail', result)
+    log('An error occurred while attempting to send mail', result)
     throw Error('Failed to send email')
   }
 }

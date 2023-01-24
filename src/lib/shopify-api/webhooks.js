@@ -1,3 +1,5 @@
+import { error } from '@dtails/logger'
+
 export async function createWebhook(shopifyApi, input) {
   const createWebhookInput = { topic: input.topic, webhookSubscription: input.webhookSubscription }
   const query = `mutation webhookSubscriptionCreate($topic: WebhookSubscriptionTopic!, $webhookSubscription: WebhookSubscriptionInput!) {
@@ -13,7 +15,7 @@ export async function createWebhook(shopifyApi, input) {
   }`
   const result = await shopifyApi.graphql(query, createWebhookInput)
   if (result.webhookSubscriptionCreate.userErrors.length > 0) {
-    console.error(`\n\nAn error occurred when trying to create webhook in Shopify: ${JSON.stringify(result.webhookSubscriptionCreate.userErrors)}\n\nquery: ${query}\n\ninput: ${JSON.stringify(createWebhookInput)}\n\n`)
+    error(`\n\nAn error occurred when trying to create webhook in Shopify: ${JSON.stringify(result.webhookSubscriptionCreate.userErrors)}\n\nquery: ${query}\n\ninput: ${JSON.stringify(createWebhookInput)}\n\n`)
     throw new Error(result.webhookSubscriptionCreate.userErrors)
   }
   return result.webhookSubscriptionCreate
@@ -32,7 +34,7 @@ export async function deleteWebhook(shopifyApi, shopifyWebhookGid) {
   }`
   const result = await shopifyApi.graphql(query, deleteWebhookInput)
   if (result.webhookSubscriptionDelete.userErrors.length > 0) {
-    console.error(`\n\nAn error occurred when trying to delete webhook in Shopify: ${JSON.stringify(result.webhookSubscriptionDelete.userErrors)}\n\nquery: ${query}\n\ninput: ${JSON.stringify(deleteWebhookInput)}\n\n`)
+    error(`\n\nAn error occurred when trying to delete webhook in Shopify: ${JSON.stringify(result.webhookSubscriptionDelete.userErrors)}\n\nquery: ${query}\n\ninput: ${JSON.stringify(deleteWebhookInput)}\n\n`)
     throw new Error(result.webhookSubscriptionDelete.userErrors)
   }
   return result.webhookSubscriptionDelete

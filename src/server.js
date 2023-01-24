@@ -3,6 +3,7 @@ import { getEnvironment } from '@dtails/toolbox/lib'
 import { App, ShopifyToken } from 'models'
 import { validateWebhooks } from './lib/webhook-service'
 import controllers from './controllers'
+import { log } from '@dtails/logger'
 
 Server.init({
   withCors: true,
@@ -45,7 +46,7 @@ App.query().then(
       ],
       embedded: true,
       create_additional_token_data: createAdditionalTokenData,
-      onShopInstalled: (shop, app) => { console.log('App was installed - registering webhooks for shop ' + shop.shop + ' and app "' + app); validateWebhooks(shop, app) },
+      onShopInstalled: (shop, app) => { log('App was installed - registering webhooks for shop ' + shop.shop + ' and app "' + app); validateWebhooks(shop, app) },
       get_shop_by_name: async (req, shopName) => {
         const app = await App.query().findOne({ identifier: req.query.app })
         return await ShopifyToken.query().findOne({ shop: shopName, app_id: app.id }).whereNull('uninstalledAt')

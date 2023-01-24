@@ -1,4 +1,6 @@
 import { ShopifyToken } from 'models'
+import { log } from '@dtails/logger'
+
 import { getEnvironment } from '@dtails/toolbox/lib'
 import fs from 'fs-extra'
 
@@ -7,11 +9,11 @@ let configurations = null
 
 export async function validateAllConfigurations() {
   const shops = await ShopifyToken.q.whereNull('uninstalledAt').withGraphFetched('app')
-  console.log(`Found ${shops.length} shops to validate`)
+  log(`Found ${shops.length} shops to validate`)
   const allConfigurations = await getConfigurations()
   for (const shop of shops) {
     await validateConfiguration(allConfigurations[shop.app.identifier])
-    console.log(`Successfully validated configuration for shop ${shop.shop} with identifier ${shop.app.identifier}`)
+    log(`Successfully validated configuration for shop ${shop.shop} with identifier ${shop.app.identifier}`)
   }
 }
 
@@ -27,7 +29,7 @@ export async function validateConfiguration(configuration) {
 
 export async function getConfigurations() {
   if (!configurations) {
-    console.log('Lazy loading configurations')
+    log('Lazy loading configurations')
     const fileName = getEnvironment('CONFIGURATIONS_FILE_NAME')
     const filePath = `${__dirname}/../../${fileName}`
     const fileContent = await fs.readFile(filePath, { encoding: 'utf8' })

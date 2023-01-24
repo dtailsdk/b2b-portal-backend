@@ -35,6 +35,7 @@
   "author": "dtails Sysadmin",
   "license": "ISC",
   "dependencies": {
+    "@dtails/logger": "^0.0.5",
     "@dtails/toolbox": "^0.0.2",
     "axios": "^1.2.3",
     "babel-cli": "6.26.0",

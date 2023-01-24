@@ -1,4 +1,5 @@
 import crypto from 'crypto'
+import { log, error } from '@dtails/logger'
 import { getEnvironment } from '@dtails/toolbox/lib'
 import { ShopifyToken } from 'models'
 import { createWebhook, deleteWebhook, getWebhooks } from './shopify-api/webhooks'
@@ -21,20 +22,20 @@ export async function validateWebhooks(shop, app) {
         if (webhook.topic == appWebhooks[i].topic) {
           if (webhook.callbackUrl == appWebhooks[i].webhookSubscription.callbackUrl) {
             webhookIsCreated = true
-            console.log(`Webhook with topic ${appWebhooks[i].topic} on callback URL ${appWebhooks[i].webhookSubscription.callbackUrl} was already installed`)
+            log(`Webhook with topic ${appWebhooks[i].topic} on callback URL ${appWebhooks[i].webhookSubscription.callbackUrl} was already installed`)
           } else {
-            console.log(`Callback URL has changed from ${appWebhooks[i].webhookSubscription.callbackUrl} to ${webhook.callbackUrl} - going to delete old webhook`)
+            log(`Callback URL has changed from ${appWebhooks[i].webhookSubscription.callbackUrl} to ${webhook.callbackUrl} - going to delete old webhook`)
             await deleteWebhook(shopifyApi, webhook.id)
           }
         }
       }
       if (!webhookIsCreated) {
-        console.log(`Webhook with topic ${appWebhooks[i].topic} was not installed - going to reinstall webhook`)
+        log(`Webhook with topic ${appWebhooks[i].topic} was not installed - going to reinstall webhook`)
         await createWebhook(shopifyApi, appWebhooks[i])
       }
     }
   } catch (e) {
-    console.error('Cannot validate and/or create webhook for shop ' + shop.shop + ' - got error message ' + e.message)
+    error('Cannot validate and/or create webhook for shop ' + shop.shop + ' - got error message ' + e.message)
   }
 }
 
@@ -45,7 +46,7 @@ export function verifyShopifyWebhook(secret, req, body) {
       .digest('base64')
     return digest === req.headers['x-shopify-hmac-sha256']
   } catch (error) {
-    console.log(error, req.body)
+    log(error, req.body)
     return false
   }
 }
@@ -56,11 +57,11 @@ export function verifyShopifyWebhook(secret, req, body) {
 export async function validateAllWebhooks() {
   const shops = await ShopifyToken.q.withGraphFetched('app')
   for (const shop of shops) {
-    console.log('Going to validate webhooks for shop ' + shop.shop)
+    log('Going to validate webhooks for shop ' + shop.shop)
     try {
       await validateWebhooks(shop, shop.app)
     } catch (e) {
-      console.log(e)
+      log(e)
       await sendSupportErrorMail('Cannot validate webhook for shop ' + shop.shop + ' - got error message ' + e.message)
     }
   }

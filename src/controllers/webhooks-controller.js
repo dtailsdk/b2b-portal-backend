@@ -1,4 +1,5 @@
 import { Server } from '@dtails/toolbox'
+import { log } from '@dtails/logger'
 import { verifyShopifyWebhook } from '../lib/webhook-service'
 import { sendSupportMail } from '../lib/mail-service'
 import { deleteShopData, softDeleteShopData } from '../lib/shop-service'
@@ -6,28 +7,28 @@ import { ShopifyToken, App } from 'models'
 
 async function appUninstalled(req, res) {
   const shop = await verifyWebhook(req, req.rawBody, req.query.app)
-  console.log('On uninstall, DB shop is ', shop, req.headers['x-shopify-shop-domain'])
+  log('On uninstall, DB shop is ', shop, req.headers['x-shopify-shop-domain'])
   await softDeleteShopData(shop)
   return res.sendStatus(200)
 }
 
 async function redactShopDataRequested(req, res) {
   const shop = await verifyWebhook(req, req.rawBody, req.query.app)
-  console.log('On shop redact request, DB shop is ', shop, req.headers['x-shopify-shop-domain'])
+  log('On shop redact request, DB shop is ', shop, req.headers['x-shopify-shop-domain'])
   await deleteShopData(shop)
   return res.sendStatus(200)
 }
 
 async function customersRedact(req, res) {
   const shop = await verifyWebhook(req, req.rawBody, req.query.app)
-  console.log('Customers redact requested for customer, DB shop is ', shop.id, req.headers['x-shopify-shop-domain'])
+  log('Customers redact requested for customer, DB shop is ', shop.id, req.headers['x-shopify-shop-domain'])
   await sendSupportMail('Customer data redact requested', `GDPR webhook was triggered - data was requested redacted for customer:${req.rawBody}`)
   return res.sendStatus(200)
 }
 
 async function customersDataRequest(req, res) {
   const shop = await verifyWebhook(req, req.rawBody, req.query.app)
-  console.log('Customer data requested for customer, DB shop is ', shop.id, req.headers['x-shopify-shop-domain'])
+  log('Customer data requested for customer, DB shop is ', shop.id, req.headers['x-shopify-shop-domain'])
   await sendSupportMail('Customer data requested', `GDPR webhook was triggered - data was requested for customer:${req.rawBody}`)
   return res.sendStatus(200)
 }
@@ -40,7 +41,7 @@ async function verifyWebhook(req, rawBody, appIdentifier) {
   const shopName = fullShopName.split('.')[0]
   const app = await App.query().findOne({ identifier: appIdentifier })
   const shop = await ShopifyToken.query().findOne({ shop: shopName, app_id: app.id }).whereNull('uninstalledAt')
-  console.log('Verifying webhook', appIdentifier, app, shop)
+  log('Verifying webhook', appIdentifier, app, shop)
   if (shop) {
     if (!verifyShopifyWebhook(app.shopifyAppSecret, req, rawBody)) {
       throw new Error('Webhook was not verified for shop ' + shopName)
@@ -53,7 +54,7 @@ async function verifyWebhook(req, rawBody, appIdentifier) {
 }
 
 async function ping(req, res) {
-  console.log('Ping!')
+  log('Ping!')
   return res.send('Pong')
 }
 

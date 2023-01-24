@@ -1,10 +1,11 @@
 import { Server } from '@dtails/toolbox'
+import { log } from '@dtails/logger'
 
 /**
  * Controller for the calls from the B2B portal
  */
 async function ping(req, res) {
-  console.log('Ping!')
+  log('Ping!')
   return res.send('Pong')
 }
 

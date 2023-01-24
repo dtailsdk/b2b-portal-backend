@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { delay } from '@dtails/toolbox'
+import { log, error } from '@dtails/logger'
 
 export async function createProductInShopify(shopifyApi, shopifyProduct) {
   const input = { input: shopifyProduct }
@@ -22,7 +23,7 @@ export async function createProductInShopify(shopifyApi, shopifyProduct) {
   }`
   const result = await shopifyApi.graphql(query, input)
   if (result.productCreate.userErrors.length > 0) {
-    console.error('An error occurred when trying to create product in Shopify', result.productCreate.userErrors)
+    error('An error occurred when trying to create product in Shopify', result.productCreate.userErrors)
     throw new Error(result.productCreate.userErrors)
   }
   return result.productCreate.product
@@ -47,9 +48,9 @@ export async function updateProductInShopify(shopifyApi, shopifyProduct) {
   const result = await shopifyApi.graphql(query, input)
   if (result.productUpdate.userErrors.length > 0) {
     if (result.productUpdate.userErrors.length == 1 && result.productUpdate.userErrors[0].message == 'Key must be unique within this namespace on this resource') {
-      console.log('Ignoring known Shopify bug (an error is returned even though product is successfully updated)', JSON.stringify(result.productUpdate.userErrors))
+      log('Ignoring known Shopify bug (an error is returned even though product is successfully updated)', JSON.stringify(result.productUpdate.userErrors))
     } else {
-      console.error(`\n\nAn error occurred when trying to update product in Shopify: ${JSON.stringify(result.productUpdate.userErrors)}\n\nquery: ${query}\n\ninput: ${JSON.stringify(input)}\n\n`)
+      error(`\n\nAn error occurred when trying to update product in Shopify: ${JSON.stringify(result.productUpdate.userErrors)}\n\nquery: ${query}\n\ninput: ${JSON.stringify(input)}\n\n`)
       throw new Error(result.productUpdate.userErrors)
     }
   }
@@ -72,7 +73,7 @@ export async function deleteProductInShopify(shopifyApi, shopifyProductId) {
   }`
   const result = await shopifyApi.graphql(query, input)
   if (result.productDelete.userErrors.length > 0) {
-    console.error('An error occurred when trying to delete product in Shopify', result.productDelete.userErrors)
+    error('An error occurred when trying to delete product in Shopify', result.productDelete.userErrors)
     throw new Error('An error occurred when trying to delete product in Shopify', result.productDelete.userErrors)
   }
   return result.productDelete.deletedProductId
@@ -110,7 +111,7 @@ export async function deleteMetafield(shopifyApi, id) {
   }`
   const result = await shopifyApi.graphql(query, input)
   if (result.metafieldDelete.userErrors.length > 0) {
-    console.error('An error occurred when trying to delete metafield in Shopify', result.metafieldDelete.userErrors)
+    error('An error occurred when trying to delete metafield in Shopify', result.metafieldDelete.userErrors)
     throw new Error(result.metafieldDelete.userErrors)
   }
   return result.deletedId
@@ -174,7 +175,7 @@ export async function getShopifyProducts(shopifyApi) {
   let queryUrl = null
   while (!queryUrl) {
     queryUrl = await getBulkOperation(shopifyApi)
-    console.log('Querying bulk job status')
+    log('Querying bulk job status')
     await delay(2000)
   }
   if (queryUrl == 'N/A') {

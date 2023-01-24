@@ -1,4 +1,5 @@
 import { Server } from '@dtails/toolbox'
+import { log } from '@dtails/logger'
 import { ShopifyToken } from 'models'
 import { getTheProducts } from '../lib/product-service'
 
@@ -32,7 +33,7 @@ async function getProducts(req, res) {
 }
 
 async function ping(req, res) {
-  console.log('Ping!')
+  log('Ping!')
   return res.send('Pong')
 }
 
