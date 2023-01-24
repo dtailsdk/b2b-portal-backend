@@ -14,7 +14,7 @@
       }
     },
     "checkoutConfiguration": {
-      "type": "SHOPIFY",
+      "type": "B2B_PORTAL",
       "paymentMethodConfiguration": {
         "enableNonInvoiceMethod": false
       },
