@@ -8,10 +8,10 @@ import webhooksRouter from './webhooks-controller'
 import { validateAllConfigurations } from '../lib/configuration-service'
 
 export default function init(shopifyOAuth) {
-  Server.use('/app', appsRouter(shopifyOAuth))
-  Server.use('/app/shops', shopRouter(shopifyOAuth))
-  Server.use('/app/webhooks', webhooksRouter(shopifyOAuth))
-  Server.use('/portal', portalRouter())
+  Server.use('/app/api', appsRouter(shopifyOAuth))
+  Server.use('/app/api/shops', shopRouter(shopifyOAuth))
+  Server.use('/app/api/webhooks', webhooksRouter(shopifyOAuth))
+  Server.use('/portal/api', portalRouter())
 
   validateAllConfigurations()
 }

@@ -1,14 +1,14 @@
 import crypto from 'crypto'
 import { getEnvironment } from '@mekanisme/server/lib'
 import { ShopifyToken } from 'models'
-import { createWebhook, getWebhooks } from './shopify-api/webhooks'
+import { createWebhook, deleteWebhook, getWebhooks } from './shopify-api/webhooks'
 import { getApiConnection } from './shopify-api/stores'
 import { sendSupportErrorMail } from './mail-service'
 
 export async function validateWebhooks(shop, app) {
   try {
     const appWebhooks = [
-      { topic: 'APP_UNINSTALLED', webhookSubscription: { callbackUrl: getEnvironment('SERVER_URL') + '/app/webhooks/app_uninstalled?app=' + app } }
+      { topic: 'APP_UNINSTALLED', webhookSubscription: { callbackUrl: getEnvironment('SERVER_URL') + '/app/api/webhooks/app_uninstalled?app=' + app.identifier } }
     ]
 
     const shopifyApi = getApiConnection(shop)
@@ -19,9 +19,13 @@ export async function validateWebhooks(shop, app) {
         const webhook = webhooks[j].node
 
         if (webhook.topic == appWebhooks[i].topic) {
-          console.log(`Webhook with topic ${appWebhooks[i].topic} was already installed`)
-          webhookIsCreated = true
-          break
+          if (webhook.callbackUrl == appWebhooks[i].webhookSubscription.callbackUrl) {
+            webhookIsCreated = true
+            console.log(`Webhook with topic ${appWebhooks[i].topic} on callback URL ${appWebhooks[i].webhookSubscription.callbackUrl} was already installed`)
+          } else {
+            console.log(`Callback URL has changed from ${appWebhooks[i].webhookSubscription.callbackUrl} to ${webhook.callbackUrl} - going to delete old webhook`)
+            await deleteWebhook(shopifyApi, webhook.id)
+          }
         }
       }
       if (!webhookIsCreated) {
@@ -37,8 +41,8 @@ export async function validateWebhooks(shop, app) {
 export function verifyShopifyWebhook(secret, req, body) {
   try {
     var digest = crypto.createHmac('SHA256', secret)
-    .update(new Buffer.from(body, 'utf8'))
-    .digest('base64')
+      .update(new Buffer.from(body, 'utf8'))
+      .digest('base64')
     return digest === req.headers['x-shopify-hmac-sha256']
   } catch (error) {
     console.log(error, req.body)
