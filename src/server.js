@@ -40,6 +40,8 @@ App.query().then(
       tenant_migrations: [],
       scope: [
         'read_products',
+        'write_draft_orders',
+        'read_shipping'
       ],
       embedded: true,
       create_additional_token_data: createAdditionalTokenData,
