@@ -1,8 +1,8 @@
-import { Server, Model, ShopifyOAuth } from '@mekanisme/server'
-import { getEnvironment } from '@mekanisme/server/lib'
+import { Server, Model, ShopifyOAuth } from '@dtails/toolbox'
+import { getEnvironment } from '@dtails/toolbox/lib'
 import { App, ShopifyToken } from 'models'
 import { validateWebhooks } from './lib/webhook-service'
-import controllers from 'controllers'
+import controllers from './controllers'
 
 Server.init({
   withCors: true,
