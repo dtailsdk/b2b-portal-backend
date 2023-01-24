@@ -44,6 +44,7 @@
     "babel-plugin-transform-object-rest-spread": "6.26.0",
     "babel-preset-env": "1.6.0",
     "crypto": "^1.0.1",
+    "fs-extra": "^11.1.0",
     "moment": "^2.25.3",
     "nodemailer": "^6.4.6",
     "nodemailer-postmark-transport": "^3.0.0",

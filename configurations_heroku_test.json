@@ -1,0 +1,26 @@
+{
+  "nadja": {
+    "discountConfiguration": {
+      "customerDiscount": {
+        "enableCustomerDiscount": false
+      },
+      "productDiscount": {
+        "noDisountShopifyProductIds": []
+      }
+    },
+    "cartConfiguration": {
+      "customerConfiguration": {
+        "enableSingleUnits": false
+      }
+    },
+    "checkoutConfiguration": {
+      "type": "SHOPIFY",
+      "paymentMethodConfiguration": {
+        "enableNonInvoiceMethod": false
+      },
+      "minimumOrderFeeConfiguration": {
+        "enable": false
+      }
+    }
+  }
+}
