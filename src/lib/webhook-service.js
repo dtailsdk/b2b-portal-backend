@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { getEnvironment } from '@mekanisme/server/lib'
+import { getEnvironment } from '@dtails/toolbox/lib'
 import { ShopifyToken } from 'models'
 import { createWebhook, getWebhooks } from './shopify-api/webhooks'
 import { getApiConnection } from './shopify-api/stores'

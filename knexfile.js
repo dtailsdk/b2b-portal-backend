@@ -1,3 +1,3 @@
-import { knexfile } from '@mekanisme/server/config'
+import { knexfile } from '@dtails/toolbox/config'
 
 module.exports = knexfile

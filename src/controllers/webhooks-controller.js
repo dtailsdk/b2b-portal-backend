@@ -1,4 +1,4 @@
-import { Server } from '@mekanisme/server'
+import { Server } from '@dtails/toolbox'
 import { verifyShopifyWebhook } from '../lib/webhook-service'
 import { sendSupportMail } from '../lib/mail-service'
 import { deleteShopData, softDeleteShopData } from '../lib/shop-service'

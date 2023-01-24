@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
 import postmarkTransport from 'nodemailer-postmark-transport'
-import { getEnvironment } from '@mekanisme/server/lib'
+import { getEnvironment } from '@dtails/toolbox/lib'
 
 export async function sendSupportMail(subject, textBody) {
   const toEmail = getEnvironment('SUPPORT_MAIL')

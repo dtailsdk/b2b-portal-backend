@@ -1,4 +1,4 @@
-import { Server } from '@mekanisme/server'
+import { Server } from '@dtails/toolbox'
 import { ShopifyToken } from 'models'
 import { getTheProducts } from '../lib/product-service'
 

@@ -1,4 +1,4 @@
-import { Model } from '@mekanisme/server'
+import { Model } from '@dtails/toolbox'
 
 class App extends Model {
   static tableName = 'apps'

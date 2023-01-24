@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { delay } from '@mekanisme/common'
+import { delay } from '@dtails/toolbox'
 
 export async function createProductInShopify(shopifyApi, shopifyProduct) {
   const input = { input: shopifyProduct }

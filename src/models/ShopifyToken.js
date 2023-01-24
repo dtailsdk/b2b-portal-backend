@@ -1,5 +1,5 @@
-import { Model } from '@mekanisme/server'
-import { ShopifyToken as baseShopifyToken } from '@mekanisme/server/models'
+import { Model } from '@dtails/toolbox'
+import { ShopifyToken as baseShopifyToken } from '@dtails/toolbox/models'
 
 class ShopifyToken extends baseShopifyToken {
   static tableName = 'shopify_tokens'

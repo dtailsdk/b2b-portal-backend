@@ -14,11 +14,11 @@
       "module-resolver",
       {
         "root": [
-          "./src"
+          "."
         ],
         "alias": {
-          "lib": "./lib",
-          "models": "./models"
+          "lib": "./src/lib",
+          "models": "./src/models"
         },
         "cwd": "babelrc"
       }

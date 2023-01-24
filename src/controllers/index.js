@@ -1,4 +1,4 @@
-import { Server } from '@mekanisme/server'
+import { Server } from '@dtails/toolbox'
 
 import appsRouter from './apps-controller'
 import shopRouter from './shops-controller'
