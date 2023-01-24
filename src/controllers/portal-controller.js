@@ -1,4 +1,4 @@
-import { Server } from '@mekanisme/server'
+import { Server } from '@dtails/toolbox'
 
 /**
  * Controller for the calls from the B2B portal
