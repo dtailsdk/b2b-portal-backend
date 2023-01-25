@@ -56,7 +56,6 @@ export async function setShopMetafield(dbShop) {
   const shopifyApi = getApiConnection(dbShop)
   const shopifyShop = await getShop(shopifyApi)
   const configuration = await getConfigurationByShop(dbShop)
-  console.log('configuration in set shop metafield', dbShop, configuration)
   const metafield = {
     namespace: SHOP_METAFIELD.namespace,
     key: SHOP_METAFIELD.key,
