@@ -1,11 +1,12 @@
 {
-  "some_customer_1_b2b_portal": {
+  "some_customer_b2b_portal": {
     "discountConfiguration": {
       "customerDiscount": {
         "enableCustomerDiscount": true,
-        "useB2bPortalMetafields": false,
-        "metafieldNamespace": "dtails_b2b_portal",
-        "metafieldKey": "customer_discount_percentage"
+        "percentageMetafield": {
+          "metafieldNamespace": "custom",
+          "metafieldKey": "hej"
+        }
       },
       "productDiscount": {
         "noDisountShopifyProductIds": [
@@ -16,27 +17,29 @@
     "cartConfiguration": {
       "customerConfiguration": {
         "enableSingleUnits": true,
-        "useB2bPortalMetafields": false,
-        "metafieldNamespace": "dtails_b2b_portal",
-        "metafieldKey": "allow_single_units"
+        "singleUnitsMetafield": {
+          "metafieldNamespace": "dtails_b2b_portal",
+          "metafieldKey": "allow_single_units"
+        }
       }
     },
     "checkoutConfiguration": {
-      "type": "B2B_PORTAL",
       "paymentMethodConfiguration": {
-        "enableNonInvoiceMethod": true,
+        "enableCardMethod": true,
         "customerConfiguration": {
-          "payWithInvoiceMetafield": {
-            "useB2bPortalMetafields": true
+          "disallowInvoiceMetafield": {
+            "metafieldNamespace": "dtails_b2b_portal",
+            "metafieldKey": "disallow_invoice"
           },
-          "payWithCardMetafield": {
-            "useB2bPortalMetafields": false
+          "disallowCardMetafield": {
+            "metafieldNamespace": "dtails_b2b_portal",
+            "metafieldKey": "disallow_card"
           }
         }
       },
       "minimumOrderFeeConfiguration": {
         "enable": true,
-        "feeShopifyProductId": "7984356819196",
+        "feeShopifyVariantId": "7984356819196",
         "minimumOrderPrice": [
           {
             "amount": "200",
@@ -47,30 +50,6 @@
             "currencyCode": "EUR"
           }
         ]
-      }
-    }
-  },
-  "some_customer_2_b2b_portal": {
-    "discountConfiguration": {
-      "customerDiscount": {
-        "enableCustomerDiscount": false
-      },
-      "productDiscount": {
-        "noDisountShopifyProductIds": []
-      }
-    },
-    "cartConfiguration": {
-      "customerConfiguration": {
-        "enableSingleUnits": false
-      }
-    },
-    "checkoutConfiguration": {
-      "type": "B2B_PORTAL",
-      "paymentMethodConfiguration": {
-        "enableNonInvoiceMethod": false
-      },
-      "minimumOrderFeeConfiguration": {
-        "enable": false
       }
     }
   }

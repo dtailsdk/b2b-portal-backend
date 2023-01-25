@@ -2,8 +2,7 @@ import { Server, Model, ShopifyOAuth } from '@dtails/toolbox'
 import { getEnvironment } from '@dtails/toolbox/lib'
 import { log } from '@dtails/logger'
 import { App, ShopifyToken } from 'models'
-import { validateWebhooks } from './lib/webhook-service'
-import { setConfigurationInShop } from './lib/shop-service'
+import { initializeNewShop } from './lib/shop-service'
 import controllers from './controllers'
 
 Server.init({
@@ -23,6 +22,7 @@ Server.initModel(Model, { debug: knex_debug_mode })
 const createAdditionalTokenData = async (tokenData, appIdentifier) => {
   const app = await App.query().findOne({ identifier: appIdentifier })
   tokenData.app_id = app.id
+  tokenData.app = app
   return tokenData
 }
 
@@ -41,20 +41,21 @@ App.query().then(
       models: [],
       tenant_migrations: [],
       scope: [
-        'read_products',
+        'write_products',
         'write_draft_orders',
-        'read_shipping'
+        'read_shipping',
+        'write_customers'
       ],
       embedded: true,
       create_additional_token_data: createAdditionalTokenData,
-      onShopInstalled: (shop, app) => { log('App was installed - registering webhooks for shop ' + shop.shop + ' and app "' + app); validateWebhooks(shop, app); shop.app = app; setConfigurationInShop(shop) },
+      onShopInstalled: (shop, app) => { log(shop); log('App was installed - registering webhooks for shop ' + shop.shop + ' and app "' + app); initializeNewShop(shop) },
       get_shop_by_name: async (req, shopName) => {
         const app = await App.query().findOne({ identifier: req.query.app })
         return await ShopifyToken.query().findOne({ shop: shopName, app_id: app.id }).whereNull('uninstalledAt')
       }
     })
 
-    shopifyOAuth.mount(Server, { redirectRoute: '/app' })
+    shopifyOAuth.mount(Server, { redirectRoute: '/app/api' })
 
     controllers(shopifyOAuth)
 

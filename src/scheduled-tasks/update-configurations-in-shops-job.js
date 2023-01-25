@@ -1,6 +1,6 @@
 import { Server, Model } from '@dtails/toolbox'
 import { error } from '@dtails/logger'
-import { updateConfigurationsInShops } from '../lib/shop-service'
+import { updateConfigurationsInShops } from '../lib/metafield-service'
 
 Server.init({ withCors: false })
 Server.initModel(Model, { debug: false })

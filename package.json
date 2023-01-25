@@ -8,6 +8,7 @@
     "validate-webhooks-job": "npm run build && NODE_ENV=production node dist/scheduled-tasks/validate-webhooks-job.js",
     "validate-shop-configurations-job": "npm run build && NODE_ENV=production node dist/scheduled-tasks/validate-shop-configurations-job.js",
     "update-configurations-in-shops-job": "npm run build && NODE_ENV=production node dist/scheduled-tasks/update-configurations-in-shops-job.js",
+    "configure-shops-job": "npm run build && NODE_ENV=production node dist/scheduled-tasks/configure-shops-job.js",
     "migrate:latest": "babel-node ./node_modules/.bin/knex migrate:latest",
     "migrate:rollback": "babel-node ./node_modules/.bin/knex migrate:rollback",
     "migrate:make": "babel-node ./node_modules/.bin/knex migrate:make",
@@ -36,8 +37,8 @@
   "author": "dtails Sysadmin",
   "license": "ISC",
   "dependencies": {
-    "@dtails/logger": "^0.0.5",
-    "@dtails/toolbox": "^0.0.2",
+    "@dtails/logger": "^0.0.6",
+    "@dtails/toolbox": "^0.0.7",
     "@sentry/node": "^7.32.1",
     "axios": "^1.2.3",
     "babel-cli": "6.26.0",

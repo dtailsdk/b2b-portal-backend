@@ -6,7 +6,9 @@ import { createWebhook, deleteWebhook, getWebhooks } from './shopify-api/webhook
 import { getApiConnection } from './shopify-api/stores'
 import { sendSupportErrorMail } from './mail-service'
 
-export async function validateWebhooks(shop, app) {
+export async function validateWebhooks(shop) {
+  const app = shop.app
+  console.log('app identifier when adding webhook: ' + app.identifier)
   try {
     const appWebhooks = [
       { topic: 'APP_UNINSTALLED', webhookSubscription: { callbackUrl: getEnvironment('SERVER_URL') + '/app/api/webhooks/app_uninstalled?app=' + app.identifier } }
@@ -59,7 +61,7 @@ export async function validateAllWebhooks() {
   for (const shop of shops) {
     log('Going to validate webhooks for shop ' + shop.shop)
     try {
-      await validateWebhooks(shop, shop.app)
+      await validateWebhooks(shop)
     } catch (e) {
       log(e)
       await sendSupportErrorMail('Cannot validate webhook for shop ' + shop.shop + ' - got error message ' + e.message)

@@ -2,24 +2,53 @@
   "nadja": {
     "discountConfiguration": {
       "customerDiscount": {
-        "enableCustomerDiscount": false
+        "enableCustomerDiscount": true,
+        "percentageMetafield": {
+          "metafieldNamespace": "dtails_b2b_portal",
+          "metafieldKey": "customer_discount_percentage"
+        }
       },
       "productDiscount": {
-        "noDisountShopifyProductIds": []
+        "noDisountShopifyProductIds": [
+        ]
       }
     },
     "cartConfiguration": {
       "customerConfiguration": {
-        "enableSingleUnits": false
+        "enableSingleUnits": true,
+        "singleUnitsMetafield": {
+          "metafieldNamespace": "dtails_b2b_portal",
+          "metafieldKey": "allow_single_units"
+        }
       }
     },
     "checkoutConfiguration": {
-      "type": "B2B_PORTAL",
       "paymentMethodConfiguration": {
-        "enableNonInvoiceMethod": false
+        "enableCardMethod": true,
+        "customerConfiguration": {
+          "disallowInvoiceMetafield": {
+            "metafieldNamespace": "dtails_b2b_portal",
+            "metafieldKey": "disallow_invoice_payment"
+          },
+          "disallowCardMetafield": {
+            "metafieldNamespace": "dtails_b2b_portal",
+            "metafieldKey": "disallow_card_payment"
+          }
+        }
       },
       "minimumOrderFeeConfiguration": {
-        "enable": false
+        "enable": true,
+        "feeShopifyVariantId": "7984356819196",
+        "minimumOrderPrice": [
+          {
+            "amount": "200",
+            "currencyCode": "DKK"
+          },
+          {
+            "amount": "70",
+            "currencyCode": "EUR"
+          }
+        ]
       }
     }
   }

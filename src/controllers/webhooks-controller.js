@@ -39,6 +39,7 @@ async function verifyWebhook(req, rawBody, appIdentifier) {
   if (!appIdentifier) {
     throw Error('App query parameter is not defined in webhook call from Shopify')
   }
+  log('Verify webhook for app identifier ' + appIdentifier)
   const fullShopName = req.headers['x-shopify-shop-domain']
   const shopName = fullShopName.split('.')[0]
   const app = await App.query().findOne({ identifier: appIdentifier })

@@ -4,7 +4,6 @@ import { log } from '@dtails/logger'
 import { getEnvironment } from '@dtails/toolbox/lib'
 import fs from 'fs-extra'
 
-const VALID_CHECKOUT_TYPES = ['B2B_PORTAL', 'SHOPIFY']
 let configurations = null
 
 export async function validateAllConfigurations() {
@@ -20,9 +19,6 @@ export async function validateAllConfigurations() {
 export async function validateConfiguration(configuration) {
   if (!configuration) {
     throw Error(`configuration is not defined`)
-  }
-  if (!VALID_CHECKOUT_TYPES.includes(configuration.checkoutConfiguration.type)) {
-    throw Error(`configuration.checkoutConfiguration must be one of [${VALID_CHECKOUT_TYPES}] but was ${configuration.checkoutConfiguration.type}`)
   }
   //TODO Validate remaining parameters when they have been defined
 }
