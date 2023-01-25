@@ -23,7 +23,7 @@ export async function deleteShopData(shop) {
 }
 
 export async function initializeNewShop(dbShop){
-  validateWebhooks(shop)
+  await validateWebhooks(dbShop)
   await setShopMetafield(dbShop)
   await createDefinedMetafields(dbShop)
 }
