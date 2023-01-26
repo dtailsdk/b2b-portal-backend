@@ -38,6 +38,7 @@ export async function validateConfiguration(configuration) {
     )
   }
   verify(configuration)
+  return true
 }
 
 export async function getConfigurations() {

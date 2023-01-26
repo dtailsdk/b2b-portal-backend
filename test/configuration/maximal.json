@@ -1,0 +1,55 @@
+{
+  "discountConfiguration": {
+    "customerDiscount": {
+      "enableCustomerDiscount": true,
+      "percentageMetafield": {
+        "metafieldNamespace": "dtails_b2b_portal",
+        "metafieldKey": "customer_discount_percentage"
+      }
+    },
+    "productDiscount": {
+      "noDisountShopifyProductIds": [
+        "7984356819196",
+        "7984356819197"
+      ]
+    }
+  },
+  "cartConfiguration": {
+    "customerConfiguration": {
+      "enableSingleUnits": true,
+      "singleUnitsMetafield": {
+        "metafieldNamespace": "dtails_b2b_portal",
+        "metafieldKey": "allow_single_units"
+      }
+    }
+  },
+  "checkoutConfiguration": {
+    "paymentMethodConfiguration": {
+      "enableCardMethod": true,
+      "customerConfiguration": {
+        "disallowInvoiceMetafield": {
+          "metafieldNamespace": "dtails_b2b_portal",
+          "metafieldKey": "disallow_invoice"
+        },
+        "disallowCardMetafield": {
+          "metafieldNamespace": "dtails_b2b_portal",
+          "metafieldKey": "disallow_card"
+        }
+      }
+    },
+    "minimumOrderFeeConfiguration": {
+      "enable": true,
+      "feeShopifyVariantId": "7984356819196",
+      "minimumOrderPrice": [
+        {
+          "amount": "200.00",
+          "currencyCode": "DKK"
+        },
+        {
+          "amount": "70",
+          "currencyCode": "EUR"
+        }
+      ]
+    }
+  }
+}
