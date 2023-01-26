@@ -1,8 +1,10 @@
-import { ShopifyToken } from 'models'
-import { log } from '@dtails/logger'
-
+import Ajv from "ajv"
 import { getEnvironment } from '@dtails/toolbox/lib'
+import { SCHEMA } from './configuration-schema'
+import { log } from '@dtails/logger'
+import { ShopifyToken } from 'models'
 import fs from 'fs-extra'
+import { inspect } from "util"
 
 let configurations = null
 
@@ -20,7 +22,22 @@ export async function validateConfiguration(configuration) {
   if (!configuration) {
     throw Error(`configuration is not defined`)
   }
-  //TODO Validate remaining parameters when they have been defined
+  const ajv = new Ajv({ allErrors: true })
+  const validate = ajv.compile(SCHEMA)
+
+  const verify = (data) => {
+    const isValid = validate(data)
+    if (isValid) {
+      return data
+    }
+    throw new Error(
+      ajv.errorsText(
+        validate.errors ? validate.errors.filter((err) => err.keyword !== "if") : '',
+        { dataVar: "schemaValidation" } + "\n\n" + inspect(data)
+      )
+    )
+  }
+  verify(configuration)
 }
 
 export async function getConfigurations() {
