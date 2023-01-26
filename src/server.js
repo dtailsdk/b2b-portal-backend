@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/node";
 import { Server, Model, ShopifyOAuth } from '@dtails/toolbox'
 import { getEnvironment } from '@dtails/toolbox/lib'
 import { log } from '@dtails/logger'
@@ -18,6 +19,12 @@ Server.init({
 
 const knex_debug_mode = getEnvironment('KNEX_DEBUG_MODE') === 'true'
 Server.initModel(Model, { debug: knex_debug_mode })
+
+let sentryDSN = getEnvironment('SENTRY_DSN', false)
+if (sentryDSN) {
+  Sentry.init({ dsn: sentryDSN })
+  Server.use(Sentry.Handlers.requestHandler())
+}
 
 const createAdditionalTokenData = async (tokenData, appIdentifier) => {
   const app = await App.query().findOne({ identifier: appIdentifier })
@@ -61,6 +68,11 @@ App.query().then(
 
     Server.listen()
     Server.useNotFound()
+
+    if (sentryDSN) {
+      Server.use(Sentry.Handlers.errorHandler())
+    }
+
     Server.useErrorHandler()
   }
 )
