@@ -4,7 +4,6 @@ import { getEnvironment } from '@dtails/toolbox/lib'
 import { ShopifyToken } from 'models'
 import { createWebhook, deleteWebhook, getWebhooks } from './shopify-api/webhooks'
 import { getApiConnection } from './shopify-api/stores'
-import { sendSupportErrorMail } from './mail-service'
 
 export async function validateWebhooks(shop) {
   const app = shop.app
@@ -63,8 +62,7 @@ export async function validateAllWebhooks() {
     try {
       await validateWebhooks(shop)
     } catch (e) {
-      log(e)
-      await sendSupportErrorMail('Cannot validate webhook for shop ' + shop.shop + ' - got error message ' + e.message)
+      error(e)
     }
   }
 }

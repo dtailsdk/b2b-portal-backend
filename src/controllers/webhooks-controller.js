@@ -61,7 +61,7 @@ async function ping(req, res) {
   return res.send('Pong')
 }
 
-export default function init(shopifyOAuth) {
+export default function init() {
   const router = Server.Router()
 
   router

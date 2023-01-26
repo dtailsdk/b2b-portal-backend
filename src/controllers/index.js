@@ -10,7 +10,7 @@ import { validateAllConfigurations } from '../lib/configuration-service'
 export default function init(shopifyOAuth) {
   Server.use('/app/api', appsRouter(shopifyOAuth))
   Server.use('/app/api/shops', shopRouter(shopifyOAuth))
-  Server.use('/app/api/webhooks', webhooksRouter(shopifyOAuth))
+  Server.use('/app/api/webhooks', webhooksRouter())
   
   Server.use('/portal/api', portalRouter())
 
