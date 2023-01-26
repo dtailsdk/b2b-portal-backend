@@ -19,20 +19,18 @@
     "db:create": "createdb app_template",
     "db:drop": "dropdb app_template",
     "db:reset": "npm-run-all db:drop db:create migrate:latest seed:run",
-    "test": "ava --watch | tap-difflet",
-    "testonce": "ava | tap-difflet"
+    "test": "ava --watch  --verbose",
+    "testonce": "ava"
   },
   "ava": {
-    "sources": "src/**/*.js",
-    "files": "test/**/*.js",
+    "source": "src/**/*.js",
+    "files": [
+      "test/**/*.js"
+    ],
     "tap": true,
-    "require": "babel-register",
-    "babel": {
-      "testOptions": {
-        "babelrc": false,
-        "configFile": false
-      }
-    }
+    "require": [
+      "babel-register"
+    ]
   },
   "author": "dtails Sysadmin",
   "license": "ISC",
@@ -59,7 +57,7 @@
     "uuid": "^7.0.3"
   },
   "devDependencies": {
-    "ava": "^1.2.0",
+    "ava": "4.2.0",
     "nodemon": "1.11.0",
     "tap-difflet": "^0.7.1"
   }
