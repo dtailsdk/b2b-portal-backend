@@ -156,3 +156,116 @@ test('When single unit purchase is enabled but related metafield is not defined,
   const error = await t.throwsAsync(async () => validateConfiguration(configuration))
   t.is(error.message, 'data/cartConfiguration/customerConfiguration must have required property \'singleUnitsMetafield\'')
 })
+
+test('When card payment is enabled but related metafield is not defined, then configuration is not valid', async t => {
+  const configuration = {
+    "discountConfiguration": {
+      "customerDiscount": {
+        "enableCustomerDiscount": false
+      },
+      "productDiscount": {
+        "noDisountShopifyProductIds": []
+      }
+    },
+    "cartConfiguration": {
+      "customerConfiguration": {
+        "enableSingleUnits": false
+      }
+    },
+    "checkoutConfiguration": {
+      "paymentMethodConfiguration": {
+        "enableCardMethod": true,
+        "customerConfiguration": {
+          "disallowInvoiceMetafield": {
+            "metafieldNamespace": "dtails_b2b_portal",
+            "metafieldKey": "disallow_invoice"
+          },
+        }
+      },
+      "minimumOrderFeeConfiguration": {
+        "enable": false,
+      }
+    }
+  }
+  const error = await t.throwsAsync(async () => validateConfiguration(configuration))
+  t.is(error.message, 'data/checkoutConfiguration/paymentMethodConfiguration/customerConfiguration must have required property \'disallowCardMetafield\', data/checkoutConfiguration/paymentMethodConfiguration/enableCardMethod must be equal to one of the allowed values, data/checkoutConfiguration/paymentMethodConfiguration must match exactly one schema in oneOf')
+})
+
+test('When minimum order configuration is enabled and fee variant id is not defined, then configuration is not valid', async t => {
+  const configuration = {
+    "discountConfiguration": {
+      "customerDiscount": {
+        "enableCustomerDiscount": false
+      },
+      "productDiscount": {
+        "noDisountShopifyProductIds": []
+      }
+    },
+    "cartConfiguration": {
+      "customerConfiguration": {
+        "enableSingleUnits": false
+      }
+    },
+    "checkoutConfiguration": {
+      "paymentMethodConfiguration": {
+        "enableCardMethod": false,
+        "customerConfiguration": {
+          "disallowInvoiceMetafield": {
+            "metafieldNamespace": "dtails_b2b_portal",
+            "metafieldKey": "allow_single_units"
+          }
+        }
+      },
+      "minimumOrderFeeConfiguration": {
+        "enable": true,
+        "minimumOrderPrice": [
+          {
+            "amount": "200.00",
+            "currencyCode": "DKK"
+          },
+          {
+            "amount": "70",
+            "currencyCode": "EUR"
+          }
+        ]
+      }
+    }
+  }
+  const error = await t.throwsAsync(async () => validateConfiguration(configuration))
+  t.is(error.message, 'data/checkoutConfiguration/minimumOrderFeeConfiguration must have required property \'feeShopifyVariantId\'')
+})
+
+test('When minimum order configuration is enabled and minimum order amounts are not defined, then configuration is not valid', async t => {
+  const configuration = {
+    "discountConfiguration": {
+      "customerDiscount": {
+        "enableCustomerDiscount": false
+      },
+      "productDiscount": {
+        "noDisountShopifyProductIds": []
+      }
+    },
+    "cartConfiguration": {
+      "customerConfiguration": {
+        "enableSingleUnits": false
+      }
+    },
+    "checkoutConfiguration": {
+      "paymentMethodConfiguration": {
+        "enableCardMethod": false,
+        "customerConfiguration": {
+          "disallowInvoiceMetafield": {
+            "metafieldNamespace": "dtails_b2b_portal",
+            "metafieldKey": "allow_single_units"
+          }
+        }
+      },
+      "minimumOrderFeeConfiguration": {
+        "enable": true,
+        "feeShopifyVariantId": "7984356819196",
+      }
+    }
+  }
+  const error = await t.throwsAsync(async () => validateConfiguration(configuration))
+  t.is(error.message, 'data/checkoutConfiguration/minimumOrderFeeConfiguration must have required property \'minimumOrderPrice\'')
+})
