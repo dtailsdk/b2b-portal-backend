@@ -1,7 +1,7 @@
 {
   "discountConfiguration": {
     "customerDiscount": {
-      "enableCustomerDiscount": false
+      "enable": false
     },
     "productDiscount": {
       "enable": false

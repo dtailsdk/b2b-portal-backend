@@ -74,7 +74,7 @@ export async function createDefinedMetafields(dbShop) {
   const configuration = await getConfigurationByShop(dbShop)
   const existingMetafields = await getDefinedMetafields(shopifyApi, [CUSTOMER_OWNER_TYPE, PRODUCT_OWNER_TYPE])
 
-  if (configuration.discountConfiguration.customerDiscount.enableCustomerDiscount) {
+  if (configuration.discountConfiguration.customerDiscount.enable) {
     log(`Customer discount is enabled in configuration - will create metafield if it does not already exist`)
     const configurationMetafield = configuration.discountConfiguration.customerDiscount.percentageMetafield
     const metafield = {

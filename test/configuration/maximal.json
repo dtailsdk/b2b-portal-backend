@@ -1,7 +1,7 @@
 {
   "discountConfiguration": {
     "customerDiscount": {
-      "enableCustomerDiscount": true,
+      "enable": true,
       "percentageMetafield": {
         "metafieldNamespace": "dtails_b2b_portal",
         "metafieldKey": "customer_discount_percentage"

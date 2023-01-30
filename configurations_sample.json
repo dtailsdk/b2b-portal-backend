@@ -2,7 +2,7 @@
   "some_customer_b2b_portal": {
     "discountConfiguration": {
       "customerDiscount": {
-        "enableCustomerDiscount": true,
+        "enable": true,
         "percentageMetafield": {
           "metafieldNamespace": "custom",
           "metafieldKey": "hej"

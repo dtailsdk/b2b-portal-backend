@@ -34,7 +34,7 @@ test('When cart configuration is left out, then configuration is not valid', asy
   const configuration = {
     "discountConfiguration": {
       "customerDiscount": {
-        "enableCustomerDiscount": false
+        "enable": false
       },
       "productDiscount": {
         "enable": false
@@ -54,7 +54,7 @@ test('When checkout configuration is left out, then configuration is not valid',
   const configuration = {
     "discountConfiguration": {
       "customerDiscount": {
-        "enableCustomerDiscount": false
+        "enable": false
       },
       "productDiscount": {
         "enable": false
@@ -74,7 +74,7 @@ test('When customer discount is enabled but related metafield is not defined, th
   const configuration = {
     "discountConfiguration": {
       "customerDiscount": {
-        "enableCustomerDiscount": true
+        "enable": true
       },
       "productDiscount": {
         "enable": false
@@ -99,7 +99,7 @@ test('When single unit purchase is enabled but related metafield is not defined,
   const configuration = {
     "discountConfiguration": {
       "customerDiscount": {
-        "enableCustomerDiscount": false
+        "enable": false
       },
       "productDiscount": {
         "enable": false
@@ -124,7 +124,7 @@ test('When minimum order configuration is enabled and fee variant id is not defi
   const configuration = {
     "discountConfiguration": {
       "customerDiscount": {
-        "enableCustomerDiscount": false
+        "enable": false
       },
       "productDiscount": {
         "enable": false
@@ -159,7 +159,7 @@ test('When minimum order configuration is enabled and minimum order amounts are 
   const configuration = {
     "discountConfiguration": {
       "customerDiscount": {
-        "enableCustomerDiscount": false
+        "enable": false
       },
       "productDiscount": {
         "enable": false
@@ -186,7 +186,7 @@ test('When product discount is enabled and metafield is not defined, then config
   const configuration = {
     "discountConfiguration": {
       "customerDiscount": {
-        "enableCustomerDiscount": false
+        "enable": false
       },
       "productDiscount": {
         "enable": true

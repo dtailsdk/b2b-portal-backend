@@ -8,11 +8,11 @@ export const SCHEMA = {
         customerDiscount: {
           type: "object",
           description: "Configuration of discount on a customer level",
-          if: { properties: { enableCustomerDiscount: { const: true } } },
-          then: { required: ["enableCustomerDiscount", "percentageMetafield"] },
-          else: { required: ["enableCustomerDiscount"] },
+          if: { properties: { enable: { const: true } } },
+          then: { required: ["enable", "percentageMetafield"] },
+          else: { required: ["enable"] },
           properties: {
-            enableCustomerDiscount: {
+            enable: {
               type: "boolean",
               description: "Determines whether discount on a customer level is enabled",
             },

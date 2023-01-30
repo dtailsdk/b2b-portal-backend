@@ -2,7 +2,7 @@
   "rosemunde": {
     "discountConfiguration": {
       "customerDiscount": {
-        "enableCustomerDiscount": false
+        "enable": false
       },
       "productDiscount": {
         "enable": false
@@ -22,7 +22,7 @@
   "new_mags": {
     "discountConfiguration": {
       "customerDiscount": {
-        "enableCustomerDiscount": true,
+        "enable": true,
         "percentageMetafield": {
           "metafieldNamespace": "custom",
           "metafieldKey": "line_item_discount"
