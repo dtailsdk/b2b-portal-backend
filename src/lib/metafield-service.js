@@ -4,6 +4,8 @@ import { getApiConnection, getShop } from './shopify-api/stores'
 import { updateMetafield, createMetafieldDefinition, getMetafieldDefinitions } from './shopify-api/metafields'
 import { log } from '@dtails/logger'
 
+export const CUSTOMER_OWNER_TYPE = 'CUSTOMER'
+export const PRODUCT_OWNER_TYPE = 'PRODUCT'
 export const B2B_PORTAL_NAMESPACE = 'dtails_b2b_portal'
 export const SHOP_CONFIGURATION_KEY = 'shop_configuration'
 export const CUSTOMER_DISCOUNT_KEY = 'customer_discount_percentage'
@@ -19,21 +21,21 @@ export const CUSTOMER_DISCOUNT_METAFIELD = {
   namespace: B2B_PORTAL_NAMESPACE,
   key: CUSTOMER_DISCOUNT_KEY,
   type: 'number_integer',
-  ownerType: 'CUSTOMER',
+  ownerType: CUSTOMER_OWNER_TYPE,
   name: 'Customer discount percentage'
 }
 export const CUSTOMER_ALLOW_SINGLE_METAFIELD = {
   namespace: B2B_PORTAL_NAMESPACE,
   key: CUSTOMER_ALLOW_SINGLE_KEY,
   type: 'boolean',
-  ownerType: 'CUSTOMER',
+  ownerType: CUSTOMER_OWNER_TYPE,
   name: 'Allow single quantity purchases'
 }
 export const PRODUCT_DISCOUNT_DISALLOWED_METAFIELD = {
   namespace: B2B_PORTAL_NAMESPACE,
   key: PRODUCT_DISCOUNT_DISALLOWED_KEY,
   type: 'boolean',
-  ownerType: 'PRODUCT',
+  ownerType: PRODUCT_OWNER_TYPE,
   name: 'Disallow discounts for product'
 }
 
@@ -70,7 +72,7 @@ export async function createDefinedMetafieldsForShops() {
 export async function createDefinedMetafields(dbShop) {
   const shopifyApi = getApiConnection(dbShop)
   const configuration = await getConfigurationByShop(dbShop)
-  const existingMetafields = await getDefinedMetafields(shopifyApi, 'CUSTOMER')
+  const existingMetafields = await getDefinedMetafields(shopifyApi, [CUSTOMER_OWNER_TYPE, PRODUCT_OWNER_TYPE])
 
   if (configuration.discountConfiguration.customerDiscount.enableCustomerDiscount) {
     log(`Customer discount is enabled in configuration - will create metafield if it does not already exist`)
@@ -130,9 +132,9 @@ function alreadyExists(metafield, existingMetafields) {
   return false
 }
 
-async function getDefinedMetafields(shopifyApi, ownerType) {
+async function getDefinedMetafields(shopifyApi, ownerTypes) {
   const metafields = []
-  const bulkJobResult = await getMetafieldDefinitions(shopifyApi, ownerType)
+  const bulkJobResult = await getMetafieldDefinitions(shopifyApi, ownerTypes)
   const isSingleMetafield = typeof bulkJobResult === 'object'
 
   if (!bulkJobResult || (!isSingleMetafield && bulkJobResult.indexOf('{') == -1)) {

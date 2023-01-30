@@ -38,29 +38,33 @@ export async function createMetafieldDefinition(shopifyApi, metafield) {
   `
   const result = await shopifyApi.graphql(query, input)
   if (result.metafieldDefinitionCreate.userErrors.length > 0) {
-    console.error('An error occurred when trying to create metafield definition in Shopify', result.metafieldDefinitionCreate.userErrors)
+    error('An error occurred when trying to create metafield definition in Shopify', input, result.metafieldDefinitionCreate.userErrors)
     throw new Error(result.metafieldDefinitionCreate.userErrors)
   }
   return result.metafieldDefinitionCreate.createdDefinition
 }
 
-export async function getMetafieldDefinitions(shopifyApi, ownerType) {
+export async function getMetafieldDefinitions(shopifyApi, ownerTypes) {
+  let metafieldQueries = ''
+  for (const ownerType of ownerTypes) {
+    metafieldQueries += `${ownerType.toLowerCase()}: metafieldDefinitions(ownerType:${ownerType}){
+      edges{
+        node{
+          id
+          namespace
+          key
+          type{
+            name
+          }
+        }
+      }
+    }`
+  }
   const query = `mutation {
     bulkOperationRunQuery(
       query: """
       {
-        metafieldDefinitions(ownerType:${ownerType}){
-          edges{
-            node{
-              id
-              namespace
-              key
-              type{
-                name
-              }
-            }
-          }
-        }
+        ${metafieldQueries}
       }
       
       """
