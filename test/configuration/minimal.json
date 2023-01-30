@@ -4,7 +4,7 @@
       "enableCustomerDiscount": false
     },
     "productDiscount": {
-      "noDisountShopifyProductIds": []
+      "enable": false
     }
   },
   "cartConfiguration": {
@@ -13,15 +13,6 @@
     }
   },
   "checkoutConfiguration": {
-    "paymentMethodConfiguration": {
-      "enableCardMethod": false,
-      "customerConfiguration": {
-        "disallowInvoiceMetafield": {
-          "metafieldNamespace": "dtails_b2b_portal",
-          "metafieldKey": "allow_single_units"
-        }
-      }
-    },
     "minimumOrderFeeConfiguration": {
       "enable": false
     }

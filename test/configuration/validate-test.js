@@ -21,15 +21,6 @@ test('When discount configuration is left out, then configuration is not valid',
       }
     },
     "checkoutConfiguration": {
-      "paymentMethodConfiguration": {
-        "enableCardMethod": false,
-        "customerConfiguration": {
-          "disallowInvoiceMetafield": {
-            "metafieldNamespace": "dtails_b2b_portal",
-            "metafieldKey": "allow_single_units"
-          }
-        }
-      },
       "minimumOrderFeeConfiguration": {
         "enable": false
       }
@@ -46,19 +37,10 @@ test('When cart configuration is left out, then configuration is not valid', asy
         "enableCustomerDiscount": false
       },
       "productDiscount": {
-        "noDisountShopifyProductIds": []
+        "enable": false
       }
     },
     "checkoutConfiguration": {
-      "paymentMethodConfiguration": {
-        "enableCardMethod": false,
-        "customerConfiguration": {
-          "disallowInvoiceMetafield": {
-            "metafieldNamespace": "dtails_b2b_portal",
-            "metafieldKey": "allow_single_units"
-          }
-        }
-      },
       "minimumOrderFeeConfiguration": {
         "enable": false
       }
@@ -75,7 +57,7 @@ test('When checkout configuration is left out, then configuration is not valid',
         "enableCustomerDiscount": false
       },
       "productDiscount": {
-        "noDisountShopifyProductIds": []
+        "enable": false
       }
     },
     "cartConfiguration": {
@@ -95,8 +77,7 @@ test('When customer discount is enabled but related metafield is not defined, th
         "enableCustomerDiscount": true
       },
       "productDiscount": {
-        "noDisountShopifyProductIds": [
-        ]
+        "enable": false
       }
     },
     "cartConfiguration": {
@@ -105,15 +86,6 @@ test('When customer discount is enabled but related metafield is not defined, th
       }
     },
     "checkoutConfiguration": {
-      "paymentMethodConfiguration": {
-        "enableCardMethod": false,
-        "customerConfiguration": {
-          "disallowInvoiceMetafield": {
-            "metafieldNamespace": "dtails_b2b_portal",
-            "metafieldKey": "allow_single_units"
-          }
-        }
-      },
       "minimumOrderFeeConfiguration": {
         "enable": false
       }
@@ -130,7 +102,7 @@ test('When single unit purchase is enabled but related metafield is not defined,
         "enableCustomerDiscount": false
       },
       "productDiscount": {
-        "noDisountShopifyProductIds": []
+        "enable": false
       }
     },
     "cartConfiguration": {
@@ -139,15 +111,6 @@ test('When single unit purchase is enabled but related metafield is not defined,
       }
     },
     "checkoutConfiguration": {
-      "paymentMethodConfiguration": {
-        "enableCardMethod": false,
-        "customerConfiguration": {
-          "disallowInvoiceMetafield": {
-            "metafieldNamespace": "dtails_b2b_portal",
-            "metafieldKey": "allow_single_units"
-          }
-        }
-      },
       "minimumOrderFeeConfiguration": {
         "enable": false
       }
@@ -157,40 +120,6 @@ test('When single unit purchase is enabled but related metafield is not defined,
   t.is(error.message, 'data/cartConfiguration/customerConfiguration must have required property \'singleUnitsMetafield\'')
 })
 
-test('When card payment is enabled but related metafield is not defined, then configuration is not valid', async t => {
-  const configuration = {
-    "discountConfiguration": {
-      "customerDiscount": {
-        "enableCustomerDiscount": false
-      },
-      "productDiscount": {
-        "noDisountShopifyProductIds": []
-      }
-    },
-    "cartConfiguration": {
-      "customerConfiguration": {
-        "enableSingleUnits": false
-      }
-    },
-    "checkoutConfiguration": {
-      "paymentMethodConfiguration": {
-        "enableCardMethod": true,
-        "customerConfiguration": {
-          "disallowInvoiceMetafield": {
-            "metafieldNamespace": "dtails_b2b_portal",
-            "metafieldKey": "disallow_invoice"
-          },
-        }
-      },
-      "minimumOrderFeeConfiguration": {
-        "enable": false,
-      }
-    }
-  }
-  const error = await t.throwsAsync(async () => validateConfiguration(configuration))
-  t.is(error.message, 'data/checkoutConfiguration/paymentMethodConfiguration/customerConfiguration must have required property \'disallowCardMetafield\', data/checkoutConfiguration/paymentMethodConfiguration/enableCardMethod must be equal to one of the allowed values, data/checkoutConfiguration/paymentMethodConfiguration must match exactly one schema in oneOf')
-})
-
 test('When minimum order configuration is enabled and fee variant id is not defined, then configuration is not valid', async t => {
   const configuration = {
     "discountConfiguration": {
@@ -198,7 +127,7 @@ test('When minimum order configuration is enabled and fee variant id is not defi
         "enableCustomerDiscount": false
       },
       "productDiscount": {
-        "noDisountShopifyProductIds": []
+        "enable": false
       }
     },
     "cartConfiguration": {
@@ -207,15 +136,6 @@ test('When minimum order configuration is enabled and fee variant id is not defi
       }
     },
     "checkoutConfiguration": {
-      "paymentMethodConfiguration": {
-        "enableCardMethod": false,
-        "customerConfiguration": {
-          "disallowInvoiceMetafield": {
-            "metafieldNamespace": "dtails_b2b_portal",
-            "metafieldKey": "allow_single_units"
-          }
-        }
-      },
       "minimumOrderFeeConfiguration": {
         "enable": true,
         "minimumOrderPrice": [
@@ -242,7 +162,7 @@ test('When minimum order configuration is enabled and minimum order amounts are 
         "enableCustomerDiscount": false
       },
       "productDiscount": {
-        "noDisountShopifyProductIds": []
+        "enable": false
       }
     },
     "cartConfiguration": {
@@ -251,15 +171,6 @@ test('When minimum order configuration is enabled and minimum order amounts are 
       }
     },
     "checkoutConfiguration": {
-      "paymentMethodConfiguration": {
-        "enableCardMethod": false,
-        "customerConfiguration": {
-          "disallowInvoiceMetafield": {
-            "metafieldNamespace": "dtails_b2b_portal",
-            "metafieldKey": "allow_single_units"
-          }
-        }
-      },
       "minimumOrderFeeConfiguration": {
         "enable": true,
         "feeShopifyVariantId": "7984356819196",
@@ -267,5 +178,32 @@ test('When minimum order configuration is enabled and minimum order amounts are 
     }
   }
   const error = await t.throwsAsync(async () => validateConfiguration(configuration))
+  t.log('ENV->', process.env.NODE_ENV)
   t.is(error.message, 'data/checkoutConfiguration/minimumOrderFeeConfiguration must have required property \'minimumOrderPrice\'')
+})
+
+test('When product discount is enabled and metafield is not defined, then configuration is not valid', async t => {
+  const configuration = {
+    "discountConfiguration": {
+      "customerDiscount": {
+        "enableCustomerDiscount": false
+      },
+      "productDiscount": {
+        "enable": true
+      }
+    },
+    "cartConfiguration": {
+      "customerConfiguration": {
+        "enableSingleUnits": false
+      }
+    },
+    "checkoutConfiguration": {
+      "minimumOrderFeeConfiguration": {
+        "enable": false,
+      }
+    }
+  }
+  const error = await t.throwsAsync(async () => validateConfiguration(configuration))
+  t.log('ENV->', process.env.NODE_ENV)
+  t.is(error.message, 'data/discountConfiguration/productDiscount must have required property \'discountDisallowedMetafield\'')
 })

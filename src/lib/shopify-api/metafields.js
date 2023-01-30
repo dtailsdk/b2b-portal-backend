@@ -87,7 +87,6 @@ export async function getMetafieldDefinitions(shopifyApi, ownerType) {
   if (queryUrl == 'N/A') {
     return null
   }
-  console.log('queryUrl', queryUrl)
   const result = await axios.get(queryUrl)
   return result.data
 }

@@ -36,13 +36,29 @@ export const SCHEMA = {
         productDiscount: {
           type: "object",
           description: "Configuration of discount on a product level",
+          if: { properties: { enable: { const: true } } },
+          then: { required: ["enable", "discountDisallowedMetafield"] },
+          else: { required: ["enable"] },
           properties: {
-            noDisountShopifyProductIds: {
-              type: "array",
-              items: { type: "string", pattern: "^[0-9]+$" },
-              uniqueItems: true,
-              description: "A list of Shopify product ids for products for which a discount should not be applied",
+            enable: {
+              type: "boolean",
+              description: "Defines whether discount configurations applies for products",
             },
+            discountDisallowedMetafield: {
+              type: "object",
+              description: "Defines the metafield on the product that defines whether discounts do not apply for the product",
+              properties: {
+                metafieldNamespace: {
+                  type: "string",
+                  description: "Defines the metafield namespace",
+                },
+                metafieldKey: {
+                  type: "string",
+                  description: "Defines the metafield key",
+                },
+              },
+              required: ["metafieldNamespace", "metafieldKey"],
+            }
           },
         },
       },
@@ -90,92 +106,6 @@ export const SCHEMA = {
       type: "object",
       description: "Configuration of the checkout",
       properties: {
-        paymentMethodConfiguration: {
-          description: "Defines which payments methods the B2B customers can use",
-          oneOf: [
-            {
-              type: "object",
-              properties: {
-                enableCardMethod: {
-                  type: "boolean",
-                  enum: [true],
-                  description: "Defines whether the B2B checkout can use cards as a payment method",
-                },
-                customerConfiguration: {
-                  type: "object",
-                  description: "Defines the configuration of payment methods for a customer",
-                  properties: {
-                    disallowInvoiceMetafield: {
-                      type: "object",
-                      description: "Defines the metafield on the customer that defines whether the customer is disallowed to pay with invoice",
-                      properties: {
-                        metafieldNamespace: {
-                          type: "string",
-                          description: "Defines the metafield namespace",
-                        },
-                        metafieldKey: {
-                          type: "string",
-                          description: "Defines the metafield key",
-                        },
-                      },
-                      required: ["metafieldNamespace", "metafieldKey"],
-                    },
-                    disallowCardMetafield: {
-                      type: "object",
-                      description: "Defines the metafield on the customer that defines whether the customer is disallowed to pay with card",
-                      properties: {
-                        metafieldNamespace: {
-                          type: "string",
-                          description: "Defines the metafield namespace",
-                        },
-                        metafieldKey: {
-                          type: "string",
-                          description: "Defines the metafield key",
-                        },
-                      },
-                      required: ["metafieldNamespace", "metafieldKey"],
-                    },
-                  },
-                  required: ["disallowInvoiceMetafield", "disallowCardMetafield"],
-                },
-              },
-              required: ["enableCardMethod", "customerConfiguration"],
-            },
-            {
-              type: "object",
-              properties: {
-                enableCardMethod: {
-                  type: "boolean",
-                  enum: [false],
-                  description: "Defines whether the B2B checkout can use cards as a payment method",
-                },
-                customerConfiguration: {
-                  type: "object",
-                  description: "Defines the configuration of payment methods for a customer",
-                  properties: {
-                    disallowInvoiceMetafield: {
-                      type: "object",
-                      description: "Defines the metafield on the customer that defines whether the customer is disallowed to pay with invoice",
-                      properties: {
-                        metafieldNamespace: {
-                          type: "string",
-                          description: "Defines the metafield namespace",
-                        },
-                        metafieldKey: {
-                          type: "string",
-                          description: "Defines the metafield key",
-                        },
-                      },
-                      required: ["metafieldNamespace", "metafieldKey"],
-                    },
-                  },
-                  required: ["disallowInvoiceMetafield"],
-                },
-              },
-              required: ["enableCardMethod", "customerConfiguration"],
-            }
-          ]
-        },
         minimumOrderFeeConfiguration: {
           type: "object",
           description: "Defines the minimum order fee configuration",
@@ -217,7 +147,7 @@ export const SCHEMA = {
           additionalProperties: false,
         },
       },
-      required: ["paymentMethodConfiguration", "minimumOrderFeeConfiguration"],
+      required: ["minimumOrderFeeConfiguration"],
       additionalProperties: false,
     },
   },
