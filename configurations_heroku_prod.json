@@ -1,18 +1,38 @@
 {
-  "nadja": {
+  "rosemunde": {
+    "discountConfiguration": {
+      "customerDiscount": {
+        "enable": false
+      },
+      "productDiscount": {
+        "enable": false
+      }
+    },
+    "cartConfiguration": {
+      "customerConfiguration": {
+        "enableSingleUnits": false
+      }
+    },
+    "checkoutConfiguration": {
+      "minimumOrderFeeConfiguration": {
+        "enable": false
+      }
+    }
+  },
+  "new_mags": {
     "discountConfiguration": {
       "customerDiscount": {
         "enable": true,
         "percentageMetafield": {
-          "metafieldNamespace": "dtails_b2b_portal",
-          "metafieldKey": "customer_discount_percentage"
+          "metafieldNamespace": "custom",
+          "metafieldKey": "line_item_discount"
         }
       },
       "productDiscount": {
         "enable": true,
         "discountDisallowedMetafield": {
-          "metafieldNamespace": "dtails_b2b_portal",
-          "metafieldKey": "disallow_discount"
+          "metafieldNamespace": "custom",
+          "metafieldKey": "line_item_discount_disallowed"
         }
       }
     },
@@ -20,8 +40,8 @@
       "customerConfiguration": {
         "enableSingleUnits": true,
         "singleUnitsMetafield": {
-          "metafieldNamespace": "dtails_b2b_portal",
-          "metafieldKey": "allow_single_units"
+          "metafieldNamespace": "custom",
+          "metafieldKey": "brake_colli_allowed"
         }
       }
     },
@@ -31,7 +51,7 @@
         "feeShopifyVariantId": "7984356819196",
         "minimumOrderPrice": [
           {
-            "amount": "200",
+            "amount": "200.00",
             "currencyCode": "DKK"
           },
           {

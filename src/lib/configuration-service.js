@@ -2,19 +2,22 @@ import Ajv from "ajv"
 import { getEnvironment } from '@dtails/toolbox/lib'
 import { SCHEMA } from './configuration-schema'
 import { log } from '@dtails/logger'
-import { ShopifyToken } from 'models'
+import { App } from 'models'
 import fs from 'fs-extra'
 import { inspect } from "util"
 
 let configurations = null
 
+//Validates all configurations - also configurations with no current installation
 export async function validateAllConfigurations() {
-  const shops = await ShopifyToken.q.whereNull('uninstalledAt').withGraphFetched('app')
-  log(`Found ${shops.length} shops to validate`)
+  const apps = await App.q.withGraphFetched('shop')
   const allConfigurations = await getConfigurations()
-  for (const shop of shops) {
-    await validateConfiguration(allConfigurations[shop.app.identifier])
-    log(`Successfully validated configuration for shop ${shop.shop} with identifier ${shop.app.identifier}`)
+  for (const identifier in allConfigurations) {
+    const configurationApps = apps.filter(app => app.identifier == identifier)
+    const installInfo = configurationApps && configurationApps.length == 1 && configurationApps[0].shop ? 'installed in shop ' + configurationApps[0].shop.shop : 'not installed in shop'
+    log(`Going to validate configuration for identifier ${identifier} - ${installInfo}`)
+    await validateConfiguration(allConfigurations[identifier])
+    log(`Configuration for identifier ${identifier} is valid`)
   }
 }
 

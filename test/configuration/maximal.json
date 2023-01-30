@@ -1,17 +1,18 @@
 {
   "discountConfiguration": {
     "customerDiscount": {
-      "enableCustomerDiscount": true,
+      "enable": true,
       "percentageMetafield": {
         "metafieldNamespace": "dtails_b2b_portal",
         "metafieldKey": "customer_discount_percentage"
       }
     },
     "productDiscount": {
-      "noDisountShopifyProductIds": [
-        "7984356819196",
-        "7984356819197"
-      ]
+      "enable": true,
+      "discountDisallowedMetafield": {
+        "metafieldNamespace": "custom",
+        "metafieldKey": "line_item_discount_disallowed"
+      }
     }
   },
   "cartConfiguration": {
@@ -24,19 +25,6 @@
     }
   },
   "checkoutConfiguration": {
-    "paymentMethodConfiguration": {
-      "enableCardMethod": true,
-      "customerConfiguration": {
-        "disallowInvoiceMetafield": {
-          "metafieldNamespace": "dtails_b2b_portal",
-          "metafieldKey": "disallow_invoice"
-        },
-        "disallowCardMetafield": {
-          "metafieldNamespace": "dtails_b2b_portal",
-          "metafieldKey": "disallow_card"
-        }
-      }
-    },
     "minimumOrderFeeConfiguration": {
       "enable": true,
       "feeShopifyVariantId": "7984356819196",
