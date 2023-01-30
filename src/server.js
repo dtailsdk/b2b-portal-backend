@@ -48,6 +48,7 @@ App.query().then(
       models: [],
       tenant_migrations: [],
       scope: [
+        'read_orders',
         'write_products',
         'write_draft_orders',
         'read_shipping',
@@ -61,7 +62,7 @@ App.query().then(
         return await ShopifyToken.query().findOne({ shop: shopName, app_id: app.id }).whereNull('uninstalledAt')
       }
     })
-
+    console.log(JSON.stringify(shopifyOAuth, null, 2))
     shopifyOAuth.mount(Server, { redirectRoute: '/app/api' })
 
     controllers(shopifyOAuth)
