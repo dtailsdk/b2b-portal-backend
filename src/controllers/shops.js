@@ -1,7 +1,6 @@
 import { Server } from '@dtails/toolbox'
 import { log } from '@dtails/logger'
 import { ShopifyToken } from 'models'
-import { getTheProducts } from '../lib/product-service'
 
 //Service that does not require authorization used to decide whether to start OAuth flow for shops where app is not installed yet
 async function getShop(req, res) {
@@ -26,12 +25,6 @@ async function needsAuth(req, res) {
   })
 }
 
-async function getProducts(req, res) {
-  const shop = req.shopFromToken
-  const products = await getTheProducts(shop)
-  return res.send(products)
-}
-
 async function ping(req, res) {
   log('Ping!')
   return res.send('Pong')
@@ -48,11 +41,6 @@ export default function init(shopifyOAuth) {
   router
     .route('/needs_auth')
     .get(shopifyOAuth.withAuthorizedShop(), needsAuth)
-    .all(Server.middleware.methodNotAllowed)
-
-  router
-    .route('/products')
-    .get(shopifyOAuth.withAuthorizedShop(), getProducts)
     .all(Server.middleware.methodNotAllowed)
 
   router

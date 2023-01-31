@@ -5,10 +5,6 @@
   "scripts": {
     "dev": "nodemon --watch .env --watch knexfile.js --watch .babelrc --watch package.json --watch src src/server.js --exec babel-node",
     "build": "babel src -d dist",
-    "validate-webhooks-job": "npm run build && NODE_ENV=production node dist/scheduled-tasks/validate-webhooks-job.js",
-    "validate-shop-configurations-job": "npm run build && NODE_ENV=production node dist/scheduled-tasks/validate-shop-configurations-job.js",
-    "update-configurations-in-shops-job": "npm run build && NODE_ENV=production node dist/scheduled-tasks/update-configurations-in-shops-job.js",
-    "configure-shops-job": "npm run build && NODE_ENV=production node dist/scheduled-tasks/configure-shops-job.js",
     "migrate:latest": "babel-node ./node_modules/.bin/knex migrate:latest",
     "migrate:rollback": "babel-node ./node_modules/.bin/knex migrate:rollback",
     "migrate:make": "babel-node ./node_modules/.bin/knex migrate:make",
@@ -20,7 +16,11 @@
     "db:drop": "dropdb app_template",
     "db:reset": "npm-run-all db:drop db:create migrate:latest seed:run",
     "test": "ava --watch  --verbose",
-    "testonce": "ava"
+    "testonce": "ava",
+    "validate-webhooks": "npm run build && NODE_ENV=production node dist/scheduled-tasks/validate-webhooks.js",
+    "validate-shop-configurations": "npm run build && NODE_ENV=production node dist/scheduled-tasks/validate-shop-configurations.js",
+    "update-configurations-in-shops": "npm run build && NODE_ENV=production node dist/scheduled-tasks/update-configurations-in-shops.js",
+    "configure-shops": "npm run build && NODE_ENV=production node dist/scheduled-tasks/configure-shops.js"
   },
   "ava": {
     "source": "src/**/*.js",
