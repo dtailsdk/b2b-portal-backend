@@ -50,8 +50,6 @@
     "fs-extra": "^11.1.0",
     "jsonwebtoken": "^9.0.0",
     "moment": "^2.25.3",
-    "nodemailer": "^6.4.6",
-    "nodemailer-postmark-transport": "^3.0.0",
     "querystring": "^0.2.1",
     "shopify-api-node": "^3.12.2",
     "util": "^0.12.5",
