@@ -2,6 +2,7 @@
   "name": "b2b-portal-backend",
   "version": "0.0.1",
   "description": "The backend for the dtails B2B portal",
+  "author": "D.TAILS Sysadmin <support@dtails.dk>",
   "scripts": {
     "dev": "nodemon --watch .env --watch knexfile.js --watch .babelrc --watch package.json --watch src src/server.js --exec babel-node",
     "build": "babel src -d dist",
@@ -32,7 +33,6 @@
       "babel-register"
     ]
   },
-  "author": "dtails Sysadmin",
   "license": "ISC",
   "dependencies": {
     "@dtails/logger": "^0.0.6",
