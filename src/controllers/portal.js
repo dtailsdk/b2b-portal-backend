@@ -4,7 +4,7 @@ import { ShopifyToken } from 'models'
 import { getEnvironment } from '@dtails/toolbox/lib'
 import querystring from 'querystring'
 import jwt from 'jsonwebtoken'
-import { computeSignature } from '../lib/utils'
+import { computeSignature } from '../lib/security-service'
 
 /**
  * Controller for the calls from the B2B portal

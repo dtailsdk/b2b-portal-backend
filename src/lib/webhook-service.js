@@ -1,9 +1,9 @@
-import crypto from 'crypto'
 import { log, error } from '@dtails/logger'
 import { getEnvironment } from '@dtails/toolbox/lib'
 import { ShopifyToken } from 'models'
 import { createWebhook, deleteWebhook, getWebhooks } from './shopify-api/webhooks'
 import { getApiConnection } from './shopify-api/stores'
+import { verifyHmac } from './security-service'
 
 export async function validateWebhooks(shop) {
   const app = shop.app
@@ -40,15 +40,7 @@ export async function validateWebhooks(shop) {
 }
 
 export function verifyShopifyWebhook(secret, req, body) {
-  try {
-    var digest = crypto.createHmac('SHA256', secret)
-      .update(new Buffer.from(body, 'utf8'))
-      .digest('base64')
-    return digest === req.headers['x-shopify-hmac-sha256']
-  } catch (error) {
-    log(error, req.body)
-    return false
-  }
+  return verifyHmac(secret, req, body)
 }
 
 /**
