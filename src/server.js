@@ -1,10 +1,11 @@
-import * as Sentry from "@sentry/node";
+import * as Sentry from "@sentry/node"
 import { Server, Model, ShopifyOAuth } from '@dtails/toolbox'
 import { getEnvironment } from '@dtails/toolbox/lib'
 import { log } from '@dtails/logger'
 import { App, ShopifyToken } from 'models'
 import { initializeNewShop } from './lib/shop-service'
 import controllers from './controllers'
+const { knexSnakeCaseMappers } = require('objection')
 
 Server.init({
   withCors: true,
@@ -18,7 +19,7 @@ Server.init({
 })
 
 const knex_debug_mode = getEnvironment('KNEX_DEBUG_MODE') === 'true'
-Server.initModel(Model, { debug: knex_debug_mode })
+Server.initModel(Model, { debug: knex_debug_mode, ...knexSnakeCaseMappers() })
 
 let sentryDSN = getEnvironment('SENTRY_DSN', false)
 if (sentryDSN) {
@@ -28,7 +29,7 @@ if (sentryDSN) {
 
 const createAdditionalTokenData = async (tokenData, appIdentifier) => {
   const app = await App.query().findOne({ identifier: appIdentifier })
-  tokenData.app_id = app.id
+  tokenData.appId = app.id
   tokenData.app = app
   return tokenData
 }
@@ -59,10 +60,9 @@ App.query().then(
       onShopInstalled: (shop, app) => { log(shop); log('App was installed - registering webhooks for shop ' + shop.shop + ' and app "' + app); initializeNewShop(shop) },
       get_shop_by_name: async (req, shopName) => {
         const app = await App.query().findOne({ identifier: req.query.app })
-        return await ShopifyToken.query().findOne({ shop: shopName, app_id: app.id }).whereNull('uninstalledAt')
+        return await ShopifyToken.query().findOne({ shop: shopName, appId: app.id }).whereNull('uninstalledAt')
       }
     })
-    console.log(JSON.stringify(shopifyOAuth, null, 2))
     shopifyOAuth.mount(Server, { redirectRoute: '/app/api' })
 
     controllers(shopifyOAuth)

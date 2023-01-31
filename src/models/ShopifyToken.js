@@ -10,7 +10,7 @@ class ShopifyToken extends baseShopifyToken {
       modelClass: `${__dirname}/App`,
       join: {
         from: 'apps.id',
-        to: 'shopify_tokens.app_id',
+        to: 'shopify_tokens.appId',
       },
     }
   }

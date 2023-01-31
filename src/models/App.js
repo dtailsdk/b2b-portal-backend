@@ -10,7 +10,7 @@ class App extends Model {
       modelClass: `${__dirname}/ShopifyToken`,
       join: {
         from: 'apps.id',
-        to: 'shopify_tokens.app_id',
+        to: 'shopify_tokens.appId',
       },
     }
   }

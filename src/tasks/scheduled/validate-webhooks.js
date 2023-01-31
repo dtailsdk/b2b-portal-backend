@@ -1,9 +1,10 @@
 import { Server, Model } from '@dtails/toolbox'
 import { error } from '@dtails/logger'
 import { validateAllWebhooks } from '../../lib/webhook-service'
+const { knexSnakeCaseMappers } = require('objection')
 
 Server.init({ withCors: false })
-Server.initModel(Model, { debug: false })
+Server.initModel(Model, { debug: false, ...knexSnakeCaseMappers() })
 
 /**
  * Validates webhooks in all shops

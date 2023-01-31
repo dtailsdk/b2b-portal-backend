@@ -43,7 +43,7 @@ async function verifyWebhook(req, rawBody, appIdentifier) {
   const fullShopName = req.headers['x-shopify-shop-domain']
   const shopName = fullShopName.split('.')[0]
   const app = await App.query().findOne({ identifier: appIdentifier })
-  const shop = await ShopifyToken.query().findOne({ shop: shopName, app_id: app.id }).whereNull('uninstalledAt')
+  const shop = await ShopifyToken.query().findOne({ shop: shopName, appId: app.id }).whereNull('uninstalledAt')
   log('Verifying webhook', appIdentifier, app, shop)
   if (shop) {
     if (!verifyShopifyWebhook(app.shopifyAppSecret, req, rawBody)) {
