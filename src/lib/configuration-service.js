@@ -48,7 +48,7 @@ export async function getConfigurations() {
   if (!configurations) {
     log('Lazy loading configurations')
     configurations = new Map()
-    const filePath = `${__dirname}/../../configurations/${getEnvironment('CONFIGURATIONS_FILE_ENV')}`
+    const filePath = `${__dirname}/../../configurations/${getEnvironment('CONFIGURATIONS_SUB_FOLDER')}`
     const fileNames = await fs.readdirSync(filePath)
     for (const fileName of fileNames) {
       const fileContent = await fs.readFile(`${filePath}/${fileName}`, { encoding: 'utf8' })

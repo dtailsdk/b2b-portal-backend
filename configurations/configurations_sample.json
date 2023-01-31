@@ -1,45 +1,44 @@
 {
-  "some_customer_b2b_portal": {
-    "discountConfiguration": {
-      "customerDiscount": {
-        "enable": true,
-        "percentageMetafield": {
-          "metafieldNamespace": "custom",
-          "metafieldKey": "hej"
-        }
-      },
-      "productDiscount": {
-        "enable": true,
-        "discountDisallowedMetafield": {
-          "metafieldNamespace": "dtails_b2b_portal",
-          "metafieldKey": "disallow_discount"
-        }
+  "identifier": "configurations_sample",
+  "discountConfiguration": {
+    "customerDiscount": {
+      "enable": true,
+      "percentageMetafield": {
+        "metafieldNamespace": "custom",
+        "metafieldKey": "hej"
       }
     },
-    "cartConfiguration": {
-      "customerConfiguration": {
-        "enableSingleUnits": true,
-        "singleUnitsMetafield": {
-          "metafieldNamespace": "dtails_b2b_portal",
-          "metafieldKey": "allow_single_units"
+    "productDiscount": {
+      "enable": true,
+      "discountDisallowedMetafield": {
+        "metafieldNamespace": "dtails_b2b_portal",
+        "metafieldKey": "disallow_discount"
+      }
+    }
+  },
+  "cartConfiguration": {
+    "customerConfiguration": {
+      "enableSingleUnits": true,
+      "singleUnitsMetafield": {
+        "metafieldNamespace": "dtails_b2b_portal",
+        "metafieldKey": "allow_single_units"
+      }
+    }
+  },
+  "checkoutConfiguration": {
+    "minimumOrderFeeConfiguration": {
+      "enable": true,
+      "feeShopifyVariantId": "7984356819196",
+      "minimumOrderPrice": [
+        {
+          "amount": "200",
+          "currencyCode": "DKK"
+        },
+        {
+          "amount": "70",
+          "currencyCode": "EUR"
         }
-      }
-    },
-    "checkoutConfiguration": {
-      "minimumOrderFeeConfiguration": {
-        "enable": true,
-        "feeShopifyVariantId": "7984356819196",
-        "minimumOrderPrice": [
-          {
-            "amount": "200",
-            "currencyCode": "DKK"
-          },
-          {
-            "amount": "70",
-            "currencyCode": "EUR"
-          }
-        ]
-      }
+      ]
     }
   }
 }
