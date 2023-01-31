@@ -18,10 +18,10 @@
     "db:reset": "npm-run-all db:drop db:create migrate:latest seed:run",
     "test": "ava --watch  --verbose",
     "testonce": "ava",
-    "validate-webhooks": "npm run build && NODE_ENV=production node dist/scheduled-tasks/validate-webhooks.js",
-    "validate-shop-configurations": "npm run build && NODE_ENV=production node dist/scheduled-tasks/validate-shop-configurations.js",
-    "update-configurations-in-shops": "npm run build && NODE_ENV=production node dist/scheduled-tasks/update-configurations-in-shops.js",
-    "configure-shops": "npm run build && NODE_ENV=production node dist/scheduled-tasks/configure-shops.js"
+    "validate-webhooks": "npm run build && NODE_ENV=production node dist/tasks/scheduled/validate-webhooks.js",
+    "validate-shop-configurations": "npm run build && NODE_ENV=production node dist/tasks/validate-shop-configurations.js",
+    "update-configurations-in-shops": "npm run build && NODE_ENV=production node dist/tasks/update-configurations-in-shops.js",
+    "configure-shops": "npm run build && NODE_ENV=production node dist/tasks/configure-shops.js"
   },
   "ava": {
     "source": "src/**/*.js",
