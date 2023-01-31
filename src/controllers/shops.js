@@ -1,6 +1,7 @@
 import { Server } from '@dtails/toolbox'
 import { log } from '@dtails/logger'
 import { ShopifyToken } from 'models'
+import { getConfigurations } from '../lib/configuration-service'
 
 //Service that does not require authorization used to decide whether to start OAuth flow for shops where app is not installed yet
 async function getShop(req, res) {
@@ -27,7 +28,8 @@ async function needsAuth(req, res) {
 
 async function ping(req, res) {
   log('Ping!')
-  return res.send('Pong')
+  const configurations = await getConfigurations()
+  return res.send(configurations)
 }
 
 export default function init(shopifyOAuth) {

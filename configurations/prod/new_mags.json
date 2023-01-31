@@ -1,11 +1,10 @@
 {
-  "identifier": "customer_app_identifier",
   "discountConfiguration": {
     "customerDiscount": {
       "enable": true,
       "percentageMetafield": {
-        "metafieldNamespace": "dtails_b2b_portal",
-        "metafieldKey": "customer_discount_percentage"
+        "metafieldNamespace": "custom",
+        "metafieldKey": "line_item_discount"
       }
     },
     "productDiscount": {
@@ -20,8 +19,8 @@
     "customerConfiguration": {
       "enableSingleUnits": true,
       "singleUnitsMetafield": {
-        "metafieldNamespace": "dtails_b2b_portal",
-        "metafieldKey": "allow_single_units"
+        "metafieldNamespace": "custom",
+        "metafieldKey": "brake_colli_allowed"
       }
     }
   },

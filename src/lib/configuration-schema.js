@@ -1,6 +1,10 @@
 export const SCHEMA = {
   type: "object",
   properties: {
+    identifier: {
+      type: "string",
+      description: "An identifier that is unique for the given customer and app",
+    },
     discountConfiguration: {
       type: "object",
       description: "Configuration of the discount model",
@@ -151,6 +155,6 @@ export const SCHEMA = {
       additionalProperties: false,
     },
   },
-  required: ["discountConfiguration", "cartConfiguration", "checkoutConfiguration"],
+  required: ["identifier", "discountConfiguration", "cartConfiguration", "checkoutConfiguration"],
   additionalProperties: false,
 }

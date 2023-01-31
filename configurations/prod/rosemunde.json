@@ -1,5 +1,4 @@
 {
-  "identifier": "customer_app_identifier",
   "discountConfiguration": {
     "customerDiscount": {
       "enable": false

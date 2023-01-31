@@ -15,6 +15,7 @@ test('When configuration is maximal, then configuration is valid', async t => {
 
 test('When discount configuration is left out, then configuration is not valid', async t => {
   const configuration = {
+    "identifier": "customer_app_identifier",
     "cartConfiguration": {
       "customerConfiguration": {
         "enableSingleUnits": false
@@ -32,6 +33,7 @@ test('When discount configuration is left out, then configuration is not valid',
 
 test('When cart configuration is left out, then configuration is not valid', async t => {
   const configuration = {
+    "identifier": "customer_app_identifier",
     "discountConfiguration": {
       "customerDiscount": {
         "enable": false
@@ -52,6 +54,7 @@ test('When cart configuration is left out, then configuration is not valid', asy
 
 test('When checkout configuration is left out, then configuration is not valid', async t => {
   const configuration = {
+    "identifier": "customer_app_identifier",
     "discountConfiguration": {
       "customerDiscount": {
         "enable": false
@@ -72,6 +75,7 @@ test('When checkout configuration is left out, then configuration is not valid',
 
 test('When customer discount is enabled but related metafield is not defined, then configuration is not valid', async t => {
   const configuration = {
+    "identifier": "customer_app_identifier",
     "discountConfiguration": {
       "customerDiscount": {
         "enable": true
@@ -97,6 +101,7 @@ test('When customer discount is enabled but related metafield is not defined, th
 
 test('When single unit purchase is enabled but related metafield is not defined, then configuration is not valid', async t => {
   const configuration = {
+    "identifier": "customer_app_identifier",
     "discountConfiguration": {
       "customerDiscount": {
         "enable": false
@@ -122,6 +127,7 @@ test('When single unit purchase is enabled but related metafield is not defined,
 
 test('When minimum order configuration is enabled and fee variant id is not defined, then configuration is not valid', async t => {
   const configuration = {
+    "identifier": "customer_app_identifier",
     "discountConfiguration": {
       "customerDiscount": {
         "enable": false
@@ -157,6 +163,7 @@ test('When minimum order configuration is enabled and fee variant id is not defi
 
 test('When minimum order configuration is enabled and minimum order amounts are not defined, then configuration is not valid', async t => {
   const configuration = {
+    "identifier": "customer_app_identifier",
     "discountConfiguration": {
       "customerDiscount": {
         "enable": false
@@ -184,6 +191,7 @@ test('When minimum order configuration is enabled and minimum order amounts are 
 
 test('When product discount is enabled and metafield is not defined, then configuration is not valid', async t => {
   const configuration = {
+    "identifier": "customer_app_identifier",
     "discountConfiguration": {
       "customerDiscount": {
         "enable": false
@@ -206,4 +214,30 @@ test('When product discount is enabled and metafield is not defined, then config
   const error = await t.throwsAsync(async () => validateConfiguration(configuration))
   t.log('ENV->', process.env.NODE_ENV)
   t.is(error.message, 'data/discountConfiguration/productDiscount must have required property \'discountDisallowedMetafield\'')
+})
+
+test('When identifier is not defined, then configuration is not valid', async t => {
+  const configuration = {
+    "discountConfiguration": {
+      "customerDiscount": {
+        "enable": false
+      },
+      "productDiscount": {
+        "enable": false
+      }
+    },
+    "cartConfiguration": {
+      "customerConfiguration": {
+        "enableSingleUnits": false
+      }
+    },
+    "checkoutConfiguration": {
+      "minimumOrderFeeConfiguration": {
+        "enable": false,
+      }
+    }
+  }
+  const error = await t.throwsAsync(async () => validateConfiguration(configuration))
+  t.log('ENV->', process.env.NODE_ENV)
+  t.is(error.message, 'data must have required property \'identifier\'')
 })

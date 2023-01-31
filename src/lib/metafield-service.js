@@ -42,8 +42,11 @@ export const PRODUCT_DISCOUNT_DISALLOWED_METAFIELD = {
 export async function updateConfigurationsInShops() {
   const dbShops = await ShopifyToken.q.whereNull('uninstalledAt').withGraphFetched('app')
   for (const dbShop of dbShops) {
+    log(`Going to update shop metafield with configuration for shop ${dbShop.shop}`)
     await setShopMetafield(dbShop)
+    log(`Finished updating shop metafield with configuration for shop ${dbShop.shop}`)
   }
+  log(`Finished updating shop metafields for all shops`)
 }
 
 export async function setShopMetafield(dbShop) {
@@ -66,7 +69,9 @@ export async function createDefinedMetafieldsForShops() {
   for (const dbShop of dbShops) {
     log(`Going to create defined metafields for shop ${dbShop.shop}`)
     await createDefinedMetafields(dbShop)
+    log(`Created defined metafields for shop ${dbShop.shop}`)
   }
+  log(`Finished creating metafields for all shop`)
 }
 
 export async function createDefinedMetafields(dbShop) {
