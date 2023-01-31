@@ -1,4 +1,5 @@
 {
+  "identifier": "new_mags",
   "discountConfiguration": {
     "customerDiscount": {
       "enable": true,

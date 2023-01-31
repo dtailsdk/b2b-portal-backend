@@ -1,4 +1,5 @@
 {
+  "identifier": "rosemunde",
   "discountConfiguration": {
     "customerDiscount": {
       "enable": false
