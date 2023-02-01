@@ -16,7 +16,7 @@
     "db:create": "createdb app_template",
     "db:drop": "dropdb app_template",
     "db:reset": "npm-run-all db:drop db:create migrate:latest seed:run",
-    "test": "ava --watch  --verbose",
+    "test": "ava --watch  --verbose --timeout 100000",
     "testonce": "ava",
     "validate-webhooks": "npm run build && NODE_ENV=production node dist/tasks/scheduled/validate-webhooks.js",
     "validate-shop-configurations": "npm run build && NODE_ENV=production node dist/tasks/validate-shop-configurations.js",
