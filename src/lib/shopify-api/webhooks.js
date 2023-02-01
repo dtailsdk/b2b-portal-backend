@@ -52,6 +52,6 @@ export async function getWebhooks(shopifyApi) {
       }
     }
   }`
-  const result = await shopifyApi.graphql(query)
+  const result = await shopifyApi.runQuery(query)
   return result.webhookSubscriptions.edges
 }
