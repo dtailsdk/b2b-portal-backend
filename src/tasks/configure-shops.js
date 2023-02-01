@@ -1,10 +1,9 @@
-import { Server, Model } from '@dtails/toolbox'
+import { Server, Model } from '@dtails/toolbox-backend'
 import { error } from '@dtails/logger'
 import { createDefinedMetafieldsForShops } from '../lib/metafield-service'
-const { knexSnakeCaseMappers } = require('objection')
 
 Server.init({ withCors: false })
-Server.initModel(Model, { debug: false, ...knexSnakeCaseMappers() })
+Server.initModel(Model, { debug: false })
 
 /**
  * This job can be run whenever the B2B portal configuration has been set or updated for a shop

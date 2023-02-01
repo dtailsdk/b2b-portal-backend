@@ -1,0 +1,10 @@
+{
+  "version": "v1",
+  "packages": {
+    "@dtails/toolbox-backend": {
+      "signature": "dae3cabd1a22410a0d96dfbdfcaf3fd2",
+      "file": true,
+      "replaced": "^0.0.14"
+    }
+  }
+}

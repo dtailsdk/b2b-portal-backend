@@ -1,4 +1,4 @@
-import { Server } from '@dtails/toolbox'
+import { Server } from '@dtails/toolbox-backend'
 import { log } from '@dtails/logger'
 import { ShopifyToken } from 'models'
 import { getConfigurations } from '../lib/configuration-service'
@@ -28,8 +28,9 @@ async function needsAuth(req, res) {
 
 async function ping(req, res) {
   log('Ping!')
-  const configurations = await getConfigurations()
-  return res.send(configurations)
+  const shops = await ShopifyToken.q
+  console.log(shops)
+  return res.send(shops)
 }
 
 export default function init(shopifyOAuth) {

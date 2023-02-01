@@ -1,5 +1,5 @@
 import * as Sentry from "@sentry/node"
-import { Server } from '@dtails/toolbox'
+import { Server } from '@dtails/toolbox-backend'
 import { log } from '@dtails/logger'
 import { verifyShopifyWebhook } from '../lib/webhook-service'
 import { deleteShopData, softDeleteShopData } from '../lib/shop-service'

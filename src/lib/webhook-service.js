@@ -1,5 +1,5 @@
 import { log, error } from '@dtails/logger'
-import { getEnvironment } from '@dtails/toolbox/lib'
+import { getEnvironment } from '@dtails/toolbox-backend/lib'
 import { ShopifyToken } from 'models'
 import { createWebhook, deleteWebhook, getWebhooks } from './shopify-api/webhooks'
 import { getApiConnection } from './shopify-api/stores'

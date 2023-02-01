@@ -1,4 +1,4 @@
-import { Server } from '@dtails/toolbox'
+import { Server } from '@dtails/toolbox-backend'
 import * as Sentry from "@sentry/node"
 
 import appsRouter from './apps'
@@ -15,9 +15,11 @@ export default function init(shopifyOAuth) {
   
   Server.use('/portal/api', portalRouter())
 
+  /*
   try {
     validateAllConfigurations()
   } catch (error) {
     Sentry.captureException(e)
   }
+  */
 }

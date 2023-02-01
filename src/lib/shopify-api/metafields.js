@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { log, error } from '@dtails/logger'
-import { delay } from '@dtails/toolbox'
+import { delay } from '@dtails/toolbox-backend'
 
 export async function updateMetafield(shopifyApi, metafield) {
   const input = { metafields: [metafield] }
