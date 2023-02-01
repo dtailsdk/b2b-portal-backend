@@ -1,7 +1,5 @@
 import { ShopifyToken } from 'models'
 import { getConfigurationByShop, validateConfiguration } from './configuration-service'
-import { getApiConnection, getShop } from './shopify-api/stores'
-import { updateMetafield, createMetafieldDefinition, getMetafieldDefinitions } from './shopify-api/metafields'
 import { log } from '@dtails/logger'
 
 export const CUSTOMER_OWNER_TYPE = 'CUSTOMER'
@@ -50,8 +48,7 @@ export async function updateConfigurationsInShops() {
 }
 
 export async function setShopMetafield(dbShop) {
-  const shopifyApi = getApiConnection(dbShop)
-  const shopifyShop = await getShop(shopifyApi)
+  const shopifyShop = await dbShop.api().getShop()
   const configuration = await getConfigurationByShop(dbShop)
   await validateConfiguration(configuration)
   const metafield = {
@@ -61,12 +58,13 @@ export async function setShopMetafield(dbShop) {
     type: SHOP_METAFIELD.type,
     value: JSON.stringify(configuration),
   }
-  await updateMetafield(shopifyApi, metafield)
+  await dbShop.api().metafield.updateMetafield(metafield)
 }
 
 export async function createDefinedMetafieldsForShops() {
   const dbShops = await ShopifyToken.q.whereNull('uninstalledAt').withGraphFetched('app')
   for (const dbShop of dbShops) {
+    await ShopifyToken.q.where({ id: dbShop.id }).update({ shoptimistApiKey: '1234' })
     log(`Going to create defined metafields for shop ${dbShop.shop}`)
     await createDefinedMetafields(dbShop)
     log(`Created defined metafields for shop ${dbShop.shop}`)
@@ -75,8 +73,8 @@ export async function createDefinedMetafieldsForShops() {
 }
 
 export async function createDefinedMetafields(dbShop) {
-  const shopifyApi = getApiConnection(dbShop)
   const configuration = await getConfigurationByShop(dbShop)
+  const shopifyApi = dbShop.api()
   const existingMetafields = await getDefinedMetafields(shopifyApi, [CUSTOMER_OWNER_TYPE, PRODUCT_OWNER_TYPE])
 
   if (configuration.discountConfiguration.customerDiscount.enable) {
@@ -123,7 +121,7 @@ async function createIfMissing(shopifyApi, metafield, existingMetafields) {
   if (alreadyExists(metafield, existingMetafields)) {
     log(`Metafield definition with namespace ${metafield.namespace} and key ${metafield.key} already exists`)
   } else {
-    await createMetafieldDefinition(shopifyApi, metafield)
+    await shopifyApi.metafield.createMetafieldDefinition(metafield)
     log(`Created metafield definition with namespace ${metafield.namespace} and key ${metafield.key}`)
   }
 }
@@ -139,7 +137,8 @@ function alreadyExists(metafield, existingMetafields) {
 
 async function getDefinedMetafields(shopifyApi, ownerTypes) {
   const metafields = []
-  const bulkJobResult = await getMetafieldDefinitions(shopifyApi, ownerTypes)
+  const bulkJobResult = await shopifyApi.metafield.getMetafieldDefinitions(ownerTypes)
+  console.log('bulkJobResult',bulkJobResult)
   const isSingleMetafield = typeof bulkJobResult === 'object'
 
   if (!bulkJobResult || (!isSingleMetafield && bulkJobResult.indexOf('{') == -1)) {

@@ -2,7 +2,6 @@ import { log, error } from '@dtails/logger'
 import { getEnvironment } from '@dtails/toolbox-backend/lib'
 import { ShopifyToken } from 'models'
 import { createWebhook, deleteWebhook, getWebhooks } from './shopify-api/webhooks'
-import { getApiConnection } from './shopify-api/stores'
 import { verifyHmac } from './security-service'
 
 export async function validateWebhooks(shop) {
@@ -12,7 +11,7 @@ export async function validateWebhooks(shop) {
       { topic: 'APP_UNINSTALLED', webhookSubscription: { callbackUrl: getEnvironment('SERVER_URL') + '/app/api/webhooks/app_uninstalled?app=' + app.identifier } }
     ]
 
-    const shopifyApi = getApiConnection(shop)
+    const shopifyApi = shop.api()
     const webhooks = await getWebhooks(shopifyApi)
     for (let i = 0; i < appWebhooks.length; i++) {
       let webhookIsCreated = false
