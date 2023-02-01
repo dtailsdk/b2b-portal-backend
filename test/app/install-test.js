@@ -1,12 +1,30 @@
 import test from 'ava'
+const puppeteer = require('puppeteer')
+const td = require('testdouble')
+import { Server, Model } from '@dtails/toolbox'
+require('dotenv').config({ path: './.env.test' })
+
+const testShop = {
+  storeFrontUrl: 'https://b2b-portal-automated-test.myshopify.com/'
+}
+/*
+test.before(async t => {
+  Server.init({ withCors: false })
+  Server.initModel(Model, { debug: false })
+})
+
+test.after(async t => {
+  td.reset()
+})
+*/
 
 test('When ', async t => {
-  t.true(true)
-})
-/*
-const browser = await puppeteer.launch({ headless: true })
+
+
+  /*
+  const browser = await puppeteer.launch({ headless: false })
   const page = await browser.newPage()
-  await page.goto(result.redirect_url, { waitUntil: 'networkidle2' })
+  await page.goto('https://www.google.dk', { waitUntil: 'networkidle2' })
   await page.waitForSelector('#cardholder');
   await page.$eval('#cardholder', el => el.value = 'L E');
   await page.waitForSelector('#cardnumber');
@@ -24,5 +42,6 @@ const browser = await puppeteer.launch({ headless: true })
   });
 
   await browser.close()
-
   */
+  t.true(true)
+})

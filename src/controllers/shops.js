@@ -1,4 +1,4 @@
-import { Server } from '@dtails/toolbox-backend'
+import { Server } from '@dtails/toolbox'
 import { log } from '@dtails/logger'
 import { ShopifyToken } from 'models'
 import { getConfigurations } from '../lib/configuration-service'

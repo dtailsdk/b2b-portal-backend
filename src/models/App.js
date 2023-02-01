@@ -1,4 +1,4 @@
-import { Model } from '@dtails/toolbox-backend'
+import { Model } from '@dtails/toolbox'
 
 class App extends Model {
   static tableName = 'apps'

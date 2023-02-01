@@ -1,4 +1,4 @@
-import { Server, Model } from '@dtails/toolbox-backend'
+import { Server, Model } from '@dtails/toolbox'
 import { error } from '@dtails/logger'
 import { validateAllWebhooks } from '../../lib/webhook-service'
 

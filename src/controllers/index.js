@@ -1,4 +1,4 @@
-import { Server } from '@dtails/toolbox-backend'
+import { Server } from '@dtails/toolbox'
 import * as Sentry from "@sentry/node"
 
 import appsRouter from './apps'
