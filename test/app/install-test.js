@@ -3,45 +3,40 @@ const puppeteer = require('puppeteer')
 const td = require('testdouble')
 import { Server, Model } from '@dtails/toolbox-backend'
 require('dotenv').config({ path: './.env.test' })
+import { delay } from '@dtails/toolbox-backend'
+
 
 const testShop = {
-  storeFrontUrl: 'https://b2b-portal-automated-test.myshopify.com/'
+  storeFrontUrl: 'https://b2b-portal-automated-test.myshopify.com/',
+  storeFrontLoginUrl: 'https://b2b-portal-automated-test.myshopify.com/account/login',
+  apiProxyUrl: 'https://b2b-portal-automated-test.myshopify.com/apps/tokens',
+  appInstallLink: 'https://b2b-portal-automated-test.myshopify.com/admin/oauth/install_custom_app?client_id=29bad205539945372ebe1418f1cb4c5d&signature=eyJfcmFpbHMiOnsibWVzc2FnZSI6ImV5SmxlSEJwY21WelgyRjBJam94TmpjMU9EVTRNalUzTENKd1pYSnRZVzVsYm5SZlpHOXRZV2x1SWpvaVlqSmlMWEJ2Y25SaGJDMWhkWFJ2YldGMFpXUXRkR1Z6ZEM1dGVYTm9iM0JwWm5rdVkyOXRJaXdpWTJ4cFpXNTBYMmxrSWpvaU1qbGlZV1F5TURVMU16azVORFV6TnpKbFltVXhOREU0WmpGallqUmpOV1FpTENKd2RYSndiM05sSWpvaVkzVnpkRzl0WDJGd2NDSjkiLCJleHAiOiIyMDIzLTAyLTE1VDEyOjEwOjU3LjI4NFoiLCJwdXIiOm51bGx9fQ%3D%3D--c2e7f68561b88a27b74c55f9525539d533102aa0',
+  storeFrontPassword: 'automated_test',
+  customerEmail: 'support@dtails.dk',
+  customerPassword: 'test123'
 }
-/*
-test.before(async t => {
-  Server.init({ withCors: false })
-  Server.initModel(Model, { debug: false })
-})
 
-test.after(async t => {
-  td.reset()
-})
-*/
-
-test('When ', async t => {
-
-
-  /*
+test('When customer logs into Shopfiy, then a JWT is set', async t => {
   const browser = await puppeteer.launch({ headless: false })
   const page = await browser.newPage()
-  await page.goto('https://www.google.dk', { waitUntil: 'networkidle2' })
-  await page.waitForSelector('#cardholder');
-  await page.$eval('#cardholder', el => el.value = 'L E');
-  await page.waitForSelector('#cardnumber');
-  await page.$eval('#cardnumber', el => el.value = '1000 0000 0000 0008');
-  await page.waitForSelector('#expiration-month');
-  await page.$eval('#expiration-month', el => el.value = '03');
-  await page.waitForSelector('#expiration-year');
-  await page.$eval('#expiration-year', el => el.value = '23');
-  await page.waitForSelector('#cvd');
-  await page.$eval('#cvd', el => el.value = '208');
-  await page.waitForSelector(`[class*="btn btn-info"]`, { timeout: 0 })
-  await page.click('[class*="btn btn-info"]');
-  await page.waitForNavigation({
-    waitUntil: 'networkidle0',
-  });
+  await page.goto(testShop.storeFrontUrl, { waitUntil: 'networkidle2' })
+  await page.type('#password', testShop.storeFrontPassword)
+  const button = await page.waitForSelector('[type="submit"]')
+  await Promise.all([
+    button.click(),
+    page.waitForNavigation({ waitUntil: 'networkidle2' })
+  ])
 
-  await browser.close()
-  */
-  t.true(true)
+  await page.goto(testShop.storeFrontLoginUrl, { waitUntil: 'networkidle2' })
+  await page.type('#CustomerEmail', testShop.customerEmail)
+  await page.type('#CustomerPassword', testShop.customerPassword)
+
+  await Promise.all([
+    page.keyboard.press('Enter'),
+    page.waitForNavigation({ waitUntil: 'load', timeout: 100000 })
+  ])
+
+  await page.goto(testShop.apiProxyUrl, { waitUntil: 'load', timeout: 100000 })
+  const found = (await page.content()).match(/token/gi)
+  t.true(found.length == 1)
 })
