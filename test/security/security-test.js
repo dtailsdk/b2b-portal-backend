@@ -1,10 +1,6 @@
 import test from 'ava'
 const puppeteer = require('puppeteer')
-const td = require('testdouble')
-import { Server, Model } from '@dtails/toolbox-backend'
 require('dotenv').config({ path: './.env.test' })
-import { delay } from '@dtails/toolbox-backend'
-
 
 const testShop = {
   storeFrontUrl: 'https://b2b-portal-automated-test.myshopify.com/',
@@ -17,7 +13,7 @@ const testShop = {
 }
 
 test('When customer logs into Shopfiy, then a JWT is set', async t => {
-  const browser = await puppeteer.launch({ headless: false })
+  const browser = await puppeteer.launch({ headless: true })
   const page = await browser.newPage()
   await page.goto(testShop.storeFrontUrl, { waitUntil: 'networkidle2' })
   await page.type('#password', testShop.storeFrontPassword)
