@@ -36,7 +36,7 @@
   "license": "ISC",
   "dependencies": {
     "@dtails/logger": "^0.0.6",
-    "@dtails/toolbox-backend-backend": "^0.0.14",
+    "@dtails/toolbox-backend": "^0.0.14",
     "@sentry/node": "^7.32.1",
     "ajv": "^8.12.0",
     "axios": "^1.2.3",
@@ -58,6 +58,7 @@
   "devDependencies": {
     "ava": "4.2.0",
     "nodemon": "1.11.0",
+    "puppeteer": "^19.6.2",
     "tap-difflet": "^0.7.1"
   }
 }

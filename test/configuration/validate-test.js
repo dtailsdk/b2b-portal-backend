@@ -1,17 +1,6 @@
 import test from 'ava'
+import fs from 'fs-extra'
 import { validateConfiguration } from '../../src/lib/configuration-service'
-import minimal from './minimal.json'
-import maximal from './maximal.json'
-
-test('When configuration is minimal, then configuration is valid', async t => {
-  const isValid = await validateConfiguration(minimal)
-  t.true(isValid)
-})
-
-test('When configuration is maximal, then configuration is valid', async t => {
-  const isValid = await validateConfiguration(maximal)
-  t.true(isValid)
-})
 
 test('When discount configuration is left out, then configuration is not valid', async t => {
   const configuration = {
@@ -240,4 +229,26 @@ test('When identifier is not defined, then configuration is not valid', async t 
   const error = await t.throwsAsync(async () => validateConfiguration(configuration))
   t.log('ENV->', process.env.NODE_ENV)
   t.is(error.message, 'data must have required property \'identifier\'')
+})
+
+test('When validating test configurations, then configurations are valid', async t => {
+  const filePath = `${__dirname}/../../configurations/test`
+  const fileNames = await fs.readdirSync(filePath)
+  for (const fileName of fileNames) {
+    const fileContent = await fs.readFile(`${filePath}/${fileName}`, { encoding: 'utf8' })
+    const configuration = JSON.parse(fileContent)
+    const isValid = await validateConfiguration(configuration)
+    t.true(isValid)
+  }
+})
+
+test('When validating prod configurations, then configurations are valid', async t => {
+  const filePath = `${__dirname}/../../configurations/prod`
+  const fileNames = await fs.readdirSync(filePath)
+  for (const fileName of fileNames) {
+    const fileContent = await fs.readFile(`${filePath}/${fileName}`, { encoding: 'utf8' })
+    const configuration = JSON.parse(fileContent)
+    const isValid = await validateConfiguration(configuration)
+    t.true(isValid)
+  }
 })
