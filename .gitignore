@@ -29,7 +29,7 @@ configurations/dev*
 # Build generated
 dist/
 build/
-
+.yalc
 
 ### Editors ###
 
