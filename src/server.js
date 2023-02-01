@@ -1,6 +1,6 @@
 import * as Sentry from "@sentry/node"
-import { Server, Model, ShopifyOAuth } from '@dtails/toolbox'
-import { getEnvironment } from '@dtails/toolbox/lib'
+import { Server, Model, ShopifyOAuth } from '@dtails/toolbox-backend'
+import { getEnvironment } from '@dtails/toolbox-backend/lib'
 import { log } from '@dtails/logger'
 import { App, ShopifyToken } from 'models'
 import { initializeNewShop } from './lib/shop-service'

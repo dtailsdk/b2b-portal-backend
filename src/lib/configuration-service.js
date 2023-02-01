@@ -1,5 +1,5 @@
 import Ajv from "ajv"
-import { getEnvironment } from '@dtails/toolbox/lib'
+import { getEnvironment } from '@dtails/toolbox-backend/lib'
 import { SCHEMA } from './configuration-schema'
 import { log } from '@dtails/logger'
 import { App } from 'models'

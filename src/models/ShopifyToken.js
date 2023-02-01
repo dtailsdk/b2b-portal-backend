@@ -1,5 +1,5 @@
-import { Model } from '@dtails/toolbox'
-import { ShopifyToken as baseShopifyToken } from '@dtails/toolbox/models'
+import { Model } from '@dtails/toolbox-backend'
+import { ShopifyToken as baseShopifyToken } from '@dtails/toolbox-backend/models'
 
 class ShopifyToken extends baseShopifyToken {
   static tableName = 'shopify_tokens'

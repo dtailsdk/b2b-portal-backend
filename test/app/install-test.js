@@ -1,7 +1,7 @@
 import test from 'ava'
 const puppeteer = require('puppeteer')
 const td = require('testdouble')
-import { Server, Model } from '@dtails/toolbox'
+import { Server, Model } from '@dtails/toolbox-backend'
 require('dotenv').config({ path: './.env.test' })
 
 const testShop = {

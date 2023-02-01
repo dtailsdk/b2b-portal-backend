@@ -30,6 +30,7 @@ configurations/dev*
 dist/
 build/
 .yalc
+.yalc.lock
 
 ### Editors ###
 
