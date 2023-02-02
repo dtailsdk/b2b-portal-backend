@@ -1,3 +1,3 @@
-import { knexfile } from '@dtails/toolbox-backend/config'
+import { knexfile } from '@dtails/toolbox-backend/dist/config'
 
 module.exports = knexfile

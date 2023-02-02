@@ -1,7 +1,6 @@
 import test from 'ava'
 import { Server, Model } from '@dtails/toolbox-backend'
 import { ShopifyToken, App } from 'models'
-require('dotenv').config({ path: './.env.test' })
 import { softDeleteShopData } from '../../src/lib/shop-service'
 
 test.before(async t => {
