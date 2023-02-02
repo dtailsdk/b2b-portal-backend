@@ -64,7 +64,6 @@ export async function setShopMetafield(dbShop) {
 export async function createDefinedMetafieldsForShops() {
   const dbShops = await ShopifyToken.q.whereNull('uninstalledAt').withGraphFetched('app')
   for (const dbShop of dbShops) {
-    await ShopifyToken.q.where({ id: dbShop.id }).update({ shoptimistApiKey: '1234' })
     log(`Going to create defined metafields for shop ${dbShop.shop}`)
     await createDefinedMetafields(dbShop)
     log(`Created defined metafields for shop ${dbShop.shop}`)
@@ -138,7 +137,6 @@ function alreadyExists(metafield, existingMetafields) {
 async function getDefinedMetafields(shopifyApi, ownerTypes) {
   const metafields = []
   const bulkJobResult = await shopifyApi.metafield.getMetafieldDefinitions(ownerTypes)
-  console.log('bulkJobResult',bulkJobResult)
   const isSingleMetafield = typeof bulkJobResult === 'object'
 
   if (!bulkJobResult || (!isSingleMetafield && bulkJobResult.indexOf('{') == -1)) {
