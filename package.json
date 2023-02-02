@@ -15,7 +15,6 @@
     "start-task": "npm run build && NODE_ENV=production node dist/task.js",
     "db:create": "createdb b2b_portal_test",
     "db:drop": "dropdb b2b_portal_test",
-    "louise": "export NODE_ENV=test && echo $NODE_ENV && npm run migrate:latest",
     "db:reset": "npm-run-all db:drop db:create migrate:latest seed:run",
     "test": "export NODE_ENV=test && npm run db:reset && ava --watch  --verbose --timeout 100000",
     "testonce": "ava",
@@ -38,7 +37,7 @@
   "dependencies": {
     "@dtails/logger": "^0.0.6",
     "@dtails/shopify-api": "^0.0.10",
-    "@dtails/toolbox-backend": "^0.0.19",
+    "@dtails/toolbox-backend": "^0.0.20",
     "@sentry/node": "^7.32.1",
     "ajv": "^8.12.0",
     "axios": "^1.2.3",
