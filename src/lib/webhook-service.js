@@ -1,7 +1,6 @@
 import { log, error } from '@dtails/logger'
 import { getEnvironment } from '@dtails/toolbox-backend/lib'
 import { ShopifyToken } from 'models'
-import { createWebhook, deleteWebhook, getWebhooks } from './shopify-api/webhooks'
 import { verifyHmac } from './security-service'
 
 export async function validateWebhooks(shop) {
@@ -12,11 +11,12 @@ export async function validateWebhooks(shop) {
     ]
 
     const shopifyApi = shop.api()
-    const webhooks = await getWebhooks(shopifyApi)
+    const webhooks = await shopifyApi.webhook.get()
+    console.log('webhooks', webhooks)
     for (let i = 0; i < appWebhooks.length; i++) {
       let webhookIsCreated = false
       for (let j = 0; j < webhooks.length; j++) {
-        const webhook = webhooks[j].node
+        const webhook = webhooks[j]
 
         if (webhook.topic == appWebhooks[i].topic) {
           if (webhook.callbackUrl == appWebhooks[i].webhookSubscription.callbackUrl) {
@@ -24,13 +24,13 @@ export async function validateWebhooks(shop) {
             log(`Webhook with topic ${appWebhooks[i].topic} on callback URL ${appWebhooks[i].webhookSubscription.callbackUrl} was already installed`)
           } else {
             log(`Callback URL has changed from ${appWebhooks[i].webhookSubscription.callbackUrl} to ${webhook.callbackUrl} - going to delete old webhook`)
-            await deleteWebhook(shopifyApi, webhook.id)
+            await shopifyApi.webhook.delete(webhook.id)
           }
         }
       }
       if (!webhookIsCreated) {
         log(`Webhook with topic ${appWebhooks[i].topic} was not installed - going to reinstall webhook`)
-        await createWebhook(shopifyApi, appWebhooks[i])
+        await shopifyApi.webhook.create(appWebhooks[i])
       }
     }
   } catch (e) {
