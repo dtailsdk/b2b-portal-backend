@@ -1,7 +1,7 @@
 import { Model } from '@dtails/toolbox-backend'
-import { ShopifyToken as baseShopifyToken } from '@dtails/toolbox-backend/models'
+import { ShopifyToken as baseShopifyToken } from '@dtails/toolbox-backend'
 import { Api } from '@dtails/shopify-api'
-import { getEnvironment } from '@dtails/toolbox-backend/lib'
+import { getEnvironment } from '@dtails/toolbox-backend'
 
 class ShopifyToken extends baseShopifyToken {
   static tableName = 'shopify_tokens'
@@ -11,6 +11,11 @@ class ShopifyToken extends baseShopifyToken {
   } 
   
   api() {
+    console.log({
+      accessToken: this.token,
+      apiVersion: getEnvironment('SHOPIFY_API_VERSION', '2023-01'),
+      shopName: `${this.shop}.myshopify.com`
+    })
     return new Api({
       accessToken: this.token,
       apiVersion: getEnvironment('SHOPIFY_API_VERSION', '2023-01'),

@@ -1,5 +1,5 @@
 import { log, error } from '@dtails/logger'
-import { getEnvironment } from '@dtails/toolbox-backend/lib'
+import { getEnvironment } from '@dtails/toolbox-backend'
 import { ShopifyToken } from 'models'
 import { verifyHmac } from './security-service'
 
