@@ -12,7 +12,6 @@ export async function validateWebhooks(shop) {
 
     const shopifyApi = shop.api()
     const webhooks = await shopifyApi.webhook.get()
-    console.log('webhooks', webhooks)
     for (let i = 0; i < appWebhooks.length; i++) {
       let webhookIsCreated = false
       for (let j = 0; j < webhooks.length; j++) {
@@ -46,13 +45,13 @@ export function verifyShopifyWebhook(secret, req, body) {
  * Validates webhooks for all installed shops
  */
 export async function validateAllWebhooks() {
-  const shops = await ShopifyToken.q.withGraphFetched('app')
-  for (const shop of shops) {
-    log('Going to validate webhooks for shop ' + shop.shop)
+  const dbShops = await ShopifyToken.q.withGraphFetched('app')
+  for (const dbShop of dbShops) {
+    log('Going to validate webhooks for shop ' + dbShop.shop)
     try {
-      await validateWebhooks(shop)
+      await validateWebhooks(dbShop)
     } catch (e) {
-      error(e)
+      error(`An error occurred while validating webhooks for shop ${dbShop.shop}`, e)
     }
   }
 }

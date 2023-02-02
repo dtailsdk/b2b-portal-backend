@@ -33,8 +33,8 @@ async function getToken(req, res) {
     }, signingKey)
     return res.send({ token })
   } catch (error) {
-    console.log(error.message)
-    console.trace(error)
+    log(error.message)
+    trace(error)
   }
 
 }
@@ -50,7 +50,6 @@ async function ping(req, res) {
 }
 
 async function authenticateToken(req, res, next) {
-  console.log('authenticating')
   const authHeader = req.headers['authorization']
   const token = authHeader && authHeader.split(' ')[1]
   const signingKey = getEnvironment('SIGN_KEY')
