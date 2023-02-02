@@ -58,7 +58,7 @@ export async function setShopMetafield(dbShop) {
     type: SHOP_METAFIELD.type,
     value: JSON.stringify(configuration),
   }
-  await dbShop.api().metafield.updateMetafield(metafield)
+  await dbShop.api().metafield.update(metafield)
 }
 
 export async function createDefinedMetafieldsForShops() {

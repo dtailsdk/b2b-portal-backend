@@ -36,7 +36,7 @@
   "license": "ISC",
   "dependencies": {
     "@dtails/logger": "^0.0.6",
-    "@dtails/shopify-api": "^0.0.6",
+    "@dtails/shopify-api": "^0.0.9",
     "@dtails/toolbox": "^0.0.14",
     "@dtails/toolbox-backend": "^0.0.14",
     "@sentry/node": "^7.32.1",
