@@ -10,10 +10,10 @@ const { knexSnakeCaseMappers } = require('objection')
 Server.init({
   withCors: true,
   credentials: true,
-  corsBlacklist: ['/', '/app/api/shopify/auth/confirm', '/app/api/webhooks/app_uninstalled', '/app/api/webhooks/customers_redact', '/app/api/webhooks/customers_data_request', '/app/api/webhooks/shop_redact', '/favicon.ico'],
+  corsBlacklist: ['/', '/app/api/shopify/auth/confirm', '/app/api/webhooks', '/app/api/webhooks/app_uninstalled', '/app/api/webhooks/customers_redact', '/app/api/webhooks/customers_data_request', '/app/api/webhooks/shop_redact', '/favicon.ico'],
   bodyParser: {
     parseRawBody: true,
-    rawBodyUrls: ['/app/api/webhooks/app_uninstalled', '/app/api/webhooks/shop_redact', '/app/api/webhooks/customers_redact', '/app/api/webhooks/customers_data_request'],
+    rawBodyUrls: ['/app/api/webhooks/app_uninstalled',  '/app/api/webhooks', '/app/api/webhooks/shop_redact', '/app/api/webhooks/customers_redact', '/app/api/webhooks/customers_data_request'],
     type: ['text/plain', 'application/json']
   }
 })

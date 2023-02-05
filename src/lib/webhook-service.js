@@ -7,7 +7,9 @@ export async function validateWebhooks(shop) {
   const app = shop.app
   try {
     const appWebhooks = [
-      { topic: 'APP_UNINSTALLED', webhookSubscription: { callbackUrl: getEnvironment('SERVER_URL') + '/app/api/webhooks/app_uninstalled?app=' + app.identifier } }
+      { topic: 'APP_UNINSTALLED', webhookSubscription: { callbackUrl: getEnvironment('SERVER_URL') + '/app/api/webhooks/app_uninstalled?app=' + app.identifier } },
+      { topic: 'PRODUCTS_CREATE', webhookSubscription: { callbackUrl: getEnvironment('SERVER_URL') + '/app/api/webhooks' } },
+      { topic: 'PRODUCTS_UPDATE', webhookSubscription: { callbackUrl: getEnvironment('SERVER_URL') + '/app/api/webhooks' } }
     ]
 
     const shopifyApi = shop.api()
