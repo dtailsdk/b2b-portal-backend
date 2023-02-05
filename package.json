@@ -19,9 +19,11 @@
     "test": "export NODE_ENV=test && npm run db:reset && ava --watch  --verbose --timeout 100000",
     "testonce": "ava",
     "validate-webhooks": "npm run build && NODE_ENV=production node dist/tasks/scheduled/validate-webhooks.js",
+    "sync-all-products": "npm run build && NODE_ENV=production node dist/tasks/scheduled/sync-all-products.js",
     "validate-shop-configurations": "npm run build && NODE_ENV=production node dist/tasks/validate-shop-configurations.js",
     "update-configurations-in-shops": "npm run build && NODE_ENV=production node dist/tasks/update-configurations-in-shops.js",
-    "configure-shops": "npm run build && NODE_ENV=production node dist/tasks/configure-shops.js"
+    "configure-shops": "npm run build && NODE_ENV=production node dist/tasks/configure-shops.js",
+    "queue-worker": "npm run build && NODE_ENV=production node dist/tasks/queue-worker.js --watch"
   },
   "ava": {
     "source": "src/**/*.js",
@@ -36,7 +38,7 @@
   "license": "ISC",
   "dependencies": {
     "@dtails/logger": "^0.0.6",
-    "@dtails/shopify-api": "^0.0.10",
+    "@dtails/shopify-api": "^0.0.11",
     "@dtails/toolbox-backend": "^0.0.20",
     "@sentry/node": "^7.32.1",
     "ajv": "^8.12.0",
@@ -50,6 +52,7 @@
     "crypto": "^1.0.1",
     "fs-extra": "^11.1.0",
     "jsonwebtoken": "^9.0.0",
+    "lodash": "^4.17.21",
     "moment": "^2.25.3",
     "querystring": "^0.2.1",
     "shopify-api-node": "^3.12.2",
