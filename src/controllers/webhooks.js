@@ -3,7 +3,11 @@ import { Server } from '@dtails/toolbox-backend'
 import { log } from '@dtails/logger'
 import { verifyShopifyWebhook } from '../lib/webhook-service'
 import { deleteShopData, softDeleteShopData } from '../lib/shop-service'
-import { ShopifyToken, App } from 'models'
+import { ShopifyToken, App, Webhook } from 'models'
+import { QueueType, Priority } from '@dtails/queue-backend'
+import { QueueSender } from "@dtails/queue-backend"
+import { getEnvironment } from '@dtails/toolbox-backend'
+import moment from "moment"
 
 async function appUninstalled(req, res) {
   const shop = await verifyWebhook(req, req.rawBody, req.query.app)
@@ -35,6 +39,60 @@ async function customersDataRequest(req, res) {
   return res.sendStatus(200)
 }
 
+let queueSender = null
+
+async function queueWebhook(req, res) {
+  const store_name = req.header('x-shopify-shop-domain')
+  const topic = req.header('x-shopify-topic')
+  const hmac = req.header('x-shopify-hmac-sha256')
+  const shopifyWebhookId = req.header('x-shopify-webhook-id')
+  const entityId = req.body.id
+  const data = req.body
+
+  const shopName = store_name.split('.')[0]
+  const shop = await ShopifyToken.query().findOne({ shop: shopName }).whereNull('uninstalledAt').withGraphJoined('app')
+  const appSecret = shop.app.shopifyAppSecret
+  
+  if (!verifyShopifyWebhook(appSecret, req, req.rawBody)) {
+    return res.status(401)
+  }
+  
+  if (!queueSender) {
+    queueSender = new QueueSender(getEnvironment('DATABASE_URL'))
+  }
+  const webhook = {
+    store_name,
+    store_id: shop.id,
+    topic,
+    hmac,
+    data
+  }
+  let webhookEvent = await Webhook.q.where({ topic, hmac }).first()
+  if (webhookEvent) {
+    console.log('Webhook event already exists')
+    return res.status(200)
+  }
+  
+  webhookEvent = await Webhook.q.insert(webhook)
+  let jobData = {
+    store_name,
+    store_id: shop.id,
+    webhookId: webhookEvent.id,
+    topic,
+    entityId: data.id
+  }
+  if (topic.indexOf('product') > -1) {
+    const singletonKey = `${shop.id}-${data.id}`
+    const result = await queueSender.send(QueueType.Product, jobData, singletonKey)
+    console.log('queueSender result', result)
+  }
+
+  webhookEvent.queuedAt = moment()
+  await Webhook.q.patch(webhookEvent).where({id: webhookEvent.id})
+  res.status(200)
+
+}
+
 async function verifyWebhook(req, rawBody, appIdentifier) {
   if (!appIdentifier) {
     throw Error('App query parameter is not defined in webhook call from Shopify')
@@ -63,6 +121,11 @@ async function ping(req, res) {
 
 export default function init() {
   const router = Server.Router()
+
+  router
+    .route('/')
+    .post(queueWebhook)
+    .all(Server.middleware.methodNotAllowed)
 
   router
     .route('/app_uninstalled')
