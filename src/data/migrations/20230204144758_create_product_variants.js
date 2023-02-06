@@ -1,7 +1,7 @@
 exports.up = function (knex, Promise) {
   return knex.schema.createTable('product_variants', table => {
     table.integer('store_id').references('shopify_tokens.id').notNull()
-    table.bigInteger('product_id')
+    table.bigInteger('product_id').references(['products.store_id', 'products.product_id'])
     table.bigInteger('variant_id')
     table.string('sku')
     table.string('barcode')
