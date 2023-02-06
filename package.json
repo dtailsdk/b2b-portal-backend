@@ -39,7 +39,7 @@
   "dependencies": {
     "@dtails/logger": "^0.0.6",
     "@dtails/queue-backend": "^0.0.2",
-    "@dtails/shopify-api": "^0.0.11",
+    "@dtails/shopify-api": "^0.0.13",
     "@dtails/toolbox-backend": "^0.0.20",
     "@sentry/node": "^7.32.1",
     "ajv": "^8.12.0",
