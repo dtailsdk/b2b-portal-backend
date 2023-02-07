@@ -1,0 +1,10 @@
+{
+  "environments": {
+    "test": {
+      "scripts": {
+        "test-setup": "npm-run-all db:create migrate:latest seed:run",
+        "test": "npm run test"
+      }
+    }
+  }
+}
