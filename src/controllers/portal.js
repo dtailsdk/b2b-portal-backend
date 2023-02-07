@@ -1,5 +1,5 @@
 import { Server } from '@dtails/toolbox-backend'
-import { log } from '@dtails/logger'
+import { log, trace } from '@dtails/logger'
 import { ShopifyToken } from 'models'
 import { getEnvironment } from '@dtails/toolbox-backend'
 import querystring from 'querystring'
