@@ -2,8 +2,7 @@
   "environments": {
     "test": {
       "scripts": {
-        "test-setup": "npm run louise",
-        "test": "npm run louise"
+        "test": "npm run test"
       }
     }
   }
