@@ -252,7 +252,3 @@ test('When validating prod configurations, then configurations are valid', async
     t.true(isValid)
   }
 })
-
-test('When fail, then Heroku push fails', async t => {
-  t.true(false)
-})
