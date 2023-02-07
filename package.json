@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "The backend for the dtails B2B portal",
   "author": "D.TAILS Sysadmin <support@dtails.dk>",
+  "engines": {
+    "node": "16.14.0"
+  },
   "scripts": {
     "dev": "nodemon --watch .env --watch knexfile.js --watch .babelrc --watch package.json --watch src src/server.js --exec babel-node",
     "build": "babel src -d dist",
