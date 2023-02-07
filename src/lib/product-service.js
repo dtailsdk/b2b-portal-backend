@@ -30,14 +30,14 @@ export async function processProductJobs(jobs) {
       console.log('job done', result)
       for (let i = 0; i < jobList.length; i++) {
         const job = jobList[i]
-        job.done(false, 'Good work')
+        job.done(false)
       }
     })
     .catch((error) => {
       console.log('Error', error)
       for (let i = 0; i < jobList.length; i++) {
         const job = jobList[i]
-        job.done(error, 'Too bad')
+        job.done(error)
       }
       //TODO: Log error in logger library
     }))
@@ -75,7 +75,7 @@ export async function syncAllProducts(storeId) {
   const store = await ShopifyToken.q.findOne({ id: storeId })
   const preparedBulkQuery = store.api().product.prepareBulkQuery('products', DB_PRODUCT_MODEL, `created_at>:'2020-01-01'`)
   console.log(`Fetching all products from store: ${store.shop}`)
-  const products = await store.api().product.runBulkQuery(preparedBulkQuery, true)
+  const products = await store.api().product.runBulkQuery(preparedBulkQuery, true, 'Product')
   console.log(`Found ${products.length} products, now syncing`)
   for (let i = 0; i < products.length; i++) {
     const product = products[i]
