@@ -136,7 +136,7 @@ function alreadyExists(metafield, existingMetafields) {
 
 async function getDefinedMetafields(shopifyApi, ownerTypes) {
   const metafields = []
-  const bulkJobResult = await shopifyApi.metafield.getMetafieldDefinitions(ownerTypes)
+  const bulkJobResult = await shopifyApi.metafield.getDefinitions(ownerTypes)
   const isSingleMetafield = typeof bulkJobResult === 'object'
 
   if (!bulkJobResult || (!isSingleMetafield && bulkJobResult.indexOf('{') == -1)) {
