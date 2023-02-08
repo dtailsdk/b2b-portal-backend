@@ -6,14 +6,24 @@ export const CUSTOMER_OWNER_TYPE = 'CUSTOMER'
 export const PRODUCT_OWNER_TYPE = 'PRODUCT'
 export const B2B_PORTAL_NAMESPACE = 'dtails_b2b_portal'
 export const SHOP_CONFIGURATION_KEY = 'shop_configuration'
+export const CUSTOMER_CVR_KEY = 'customer_cvr'
 export const CUSTOMER_DISCOUNT_KEY = 'customer_discount_percentage'
 export const CUSTOMER_ALLOW_SINGLE_KEY = 'allow_single_units'
+export const PRODUCT_RESTRICTED_KEY = 'restricted_group_name'
+export const CUSTOMER_RESTRICTED_KEY = 'allow_restricted_group'
 export const PRODUCT_DISCOUNT_DISALLOWED_KEY = 'disallow_discount'
 
 export const SHOP_METAFIELD = {
   namespace: B2B_PORTAL_NAMESPACE,
   key: SHOP_CONFIGURATION_KEY,
   type: 'json',
+}
+export const CUSTOMER_CVR_METAFIELD = {
+  namespace: B2B_PORTAL_NAMESPACE,
+  key: CUSTOMER_CVR_KEY,
+  type: 'single_line_text_field',
+  ownerType: CUSTOMER_OWNER_TYPE,
+  name: 'Customer CVR'
 }
 export const CUSTOMER_DISCOUNT_METAFIELD = {
   namespace: B2B_PORTAL_NAMESPACE,
@@ -28,6 +38,20 @@ export const CUSTOMER_ALLOW_SINGLE_METAFIELD = {
   type: 'boolean',
   ownerType: CUSTOMER_OWNER_TYPE,
   name: 'Allow single quantity purchases'
+}
+export const PRODUCT_RESTRICTED_METAFIELD = {
+  namespace: B2B_PORTAL_NAMESPACE,
+  key: PRODUCT_RESTRICTED_KEY,
+  type: 'single_line_text_field',
+  ownerType: PRODUCT_OWNER_TYPE,
+  name: 'Restricted product group name'
+}
+export const CUSTOMER_RESTRICTED_METAFIELD = {
+  namespace: B2B_PORTAL_NAMESPACE,
+  key: CUSTOMER_RESTRICTED_KEY,
+  type: 'list.single_line_text_field',
+  ownerType: CUSTOMER_OWNER_TYPE,
+  name: 'Allow to buy from restricted product groups'
 }
 export const PRODUCT_DISCOUNT_DISALLOWED_METAFIELD = {
   namespace: B2B_PORTAL_NAMESPACE,
@@ -76,6 +100,19 @@ export async function createDefinedMetafields(dbShop) {
   const shopifyApi = dbShop.api()
   const existingMetafields = await getDefinedMetafields(shopifyApi, [CUSTOMER_OWNER_TYPE, PRODUCT_OWNER_TYPE])
 
+  if (configuration.customerConfiguration.enableCvr) {
+    log(`Customer CVR is enabled in configuration - will create metafield if it does not already exist`)
+    const configurationMetafield = configuration.customerConfiguration.cvrMetafield
+    const metafield = {
+      namespace: configurationMetafield.metafieldNamespace,
+      key: configurationMetafield.metafieldKey,
+      type: CUSTOMER_CVR_METAFIELD.type,
+      ownerType: CUSTOMER_CVR_METAFIELD.ownerType,
+      name: CUSTOMER_CVR_METAFIELD.name
+    }
+    await createIfMissing(shopifyApi, metafield, existingMetafields)
+  }
+
   if (configuration.discountConfiguration.customerDiscount.enable) {
     log(`Customer discount is enabled in configuration - will create metafield if it does not already exist`)
     const configurationMetafield = configuration.discountConfiguration.customerDiscount.percentageMetafield
@@ -111,6 +148,29 @@ export async function createDefinedMetafields(dbShop) {
       type: CUSTOMER_ALLOW_SINGLE_METAFIELD.type,
       ownerType: CUSTOMER_ALLOW_SINGLE_METAFIELD.ownerType,
       name: CUSTOMER_ALLOW_SINGLE_METAFIELD.name
+    }
+    await createIfMissing(shopifyApi, metafield, existingMetafields)
+  }
+
+  if (configuration.cartConfiguration.productConfiguration.enableRestrictedProducts) {
+    log(`Restricted product configuration is enabled in configuration - will create metafields if they do not already exist`)
+    let configurationMetafield = configuration.cartConfiguration.productConfiguration.restrictedProductMetafield
+    let metafield = {
+      namespace: configurationMetafield.metafieldNamespace,
+      key: configurationMetafield.metafieldKey,
+      type: PRODUCT_RESTRICTED_METAFIELD.type,
+      ownerType: PRODUCT_RESTRICTED_METAFIELD.ownerType,
+      name: PRODUCT_RESTRICTED_METAFIELD.name
+    }
+    await createIfMissing(shopifyApi, metafield, existingMetafields)
+
+    configurationMetafield = configuration.cartConfiguration.productConfiguration.restrictedCustomerMetafield
+    metafield = {
+      namespace: configurationMetafield.metafieldNamespace,
+      key: configurationMetafield.metafieldKey,
+      type: CUSTOMER_RESTRICTED_METAFIELD.type,
+      ownerType: CUSTOMER_RESTRICTED_METAFIELD.ownerType,
+      name: CUSTOMER_RESTRICTED_METAFIELD.name
     }
     await createIfMissing(shopifyApi, metafield, existingMetafields)
   }
