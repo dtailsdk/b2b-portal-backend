@@ -120,7 +120,7 @@ async function createIfMissing(shopifyApi, metafield, existingMetafields) {
   if (alreadyExists(metafield, existingMetafields)) {
     log(`Metafield definition with namespace ${metafield.namespace} and key ${metafield.key} already exists`)
   } else {
-    await shopifyApi.metafield.createMetafieldDefinition(metafield)
+    await shopifyApi.metafield.createDefinition(metafield)
     log(`Created metafield definition with namespace ${metafield.namespace} and key ${metafield.key}`)
   }
 }

@@ -5,6 +5,34 @@ export const SCHEMA = {
       type: "string",
       description: "An identifier that is unique for the given customer and app",
     },
+    customerConfiguration: {
+      type: "object",
+      description: "Configuration of the customer",
+      if: { properties: { enableCvr: { const: true } } },
+      then: { required: ["enableCvr", "cvrMetafield"] },
+      else: { required: ["enableCvr"] },
+      properties: {
+        enableCvr: {
+          type: "boolean",
+          description: "Determines whether a CVR metafield should be created on the customer",
+        },
+        cvrMetafield: {
+          type: "object",
+          description: "Defines the metafield on the customer where the customer CVR number can be set",
+          properties: {
+            metafieldNamespace: {
+              type: "string",
+              description: "Defines the metafield namespace",
+            },
+            metafieldKey: {
+              type: "string",
+              description: "Defines the metafield key",
+            },
+          },
+          required: ["metafieldNamespace", "metafieldKey"],
+        },
+      },
+    },
     discountConfiguration: {
       type: "object",
       description: "Configuration of the discount model",
@@ -102,8 +130,51 @@ export const SCHEMA = {
           },
           required: ["enableSingleUnits"],
         },
+        productConfiguration: {
+          type: "object",
+          description: "Configuration of products in relation to the cart",
+          if: { properties: { enableRestrictedProducts: { const: true } } },
+          then: { required: ["enableRestrictedProducts", "restrictedProductMetafield", "restrictedCustomerMetafield"] },
+          else: { required: ["enableRestrictedProducts"] },
+          properties: {
+            enableRestrictedProducts: {
+              type: "boolean",
+              description: "Determines whether it is possible to restrict which products a customer can add to the cart",
+            },
+            restrictedProductMetafield: {
+              type: "object",
+              description: "Defines the metafield on the product that defines in the product is in a restricted product group and if so, what the name of the product group is. If the field is not set, all customers can add the product to the cart.",
+              properties: {
+                metafieldNamespace: {
+                  type: "string",
+                  description: "Defines the metafield namespace",
+                },
+                metafieldKey: {
+                  type: "string",
+                  description: "Defines the metafield key",
+                },
+              },
+              required: ["metafieldNamespace", "metafieldKey"],
+            },
+            restrictedCustomerMetafield: {
+              type: "object",
+              description: "Defines the metafield on the customer that defines which, if any product groups the customer is allowed to add to the cart. If the field is not set, the customer can add all products that are not in a restricted product group.",
+              properties: {
+                metafieldNamespace: {
+                  type: "string",
+                  description: "Defines the metafield namespace",
+                },
+                metafieldKey: {
+                  type: "string",
+                  description: "Defines the metafield key",
+                },
+              },
+              required: ["metafieldNamespace", "metafieldKey"],
+            },
+          },
+        },
       },
-      required: ["customerConfiguration"],
+      required: ["customerConfiguration", "productConfiguration"],
       additionalProperties: false,
     },
     checkoutConfiguration: {
@@ -114,19 +185,35 @@ export const SCHEMA = {
           type: "object",
           description: "Defines the minimum order fee configuration",
           if: { properties: { enable: { const: true } } },
-          then: { required: ["enable", "feeShopifyVariantId", "minimumOrderPrice"] },
+          then: { required: ["enable", "feePrices", "minimumOrderPrices"] },
           else: { required: ["enable"] },
           properties: {
             enable: {
               type: "boolean",
               description: "Defines whether an order fee should be applied if an order total is below a given limit",
             },
-            feeShopifyVariantId: {
-              type: "string",
-              pattern: "^[0-9]+$",
-              description: "The Shopify variant id for the variant that represents the fee with prices in all currencies",
+            feePrices: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  amount: {
+                    type: "string",
+                    pattern: "^[0-9]+\.[0-9]{0,2}$",
+                    description: "Defines the fee amount",
+                  },
+                  currencyCode: {
+                    type: "string",
+                    pattern: "^[A-Z]{3}$",
+                    description: "Defines the currency of the amount",
+                  },
+                },
+                required: ["amount", "currencyCode"],
+              },
+              uniqueItems: true,
+              description: "A list of minimum order fees",
             },
-            minimumOrderPrice: {
+            minimumOrderPrices: {
               type: "array",
               items: {
                 type: "object",
@@ -155,6 +242,6 @@ export const SCHEMA = {
       additionalProperties: false,
     },
   },
-  required: ["identifier", "discountConfiguration", "cartConfiguration", "checkoutConfiguration"],
+  required: ["identifier", "customerConfiguration", "discountConfiguration", "cartConfiguration", "checkoutConfiguration"],
   additionalProperties: false,
 }

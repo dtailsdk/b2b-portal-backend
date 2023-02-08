@@ -1,5 +1,12 @@
 {
   "identifier": "nadja",
+  "customerConfiguration": {
+    "enableCvr": true,
+    "cvrMetafield": {
+      "metafieldNamespace": "custom",
+      "metafieldKey": "cvr"
+    }
+  },
   "discountConfiguration": {
     "customerDiscount": {
       "enable": true,
@@ -23,19 +30,39 @@
         "metafieldNamespace": "dtails_b2b_portal",
         "metafieldKey": "allow_single_units"
       }
+    },
+    "productConfiguration": {
+      "enableRestrictedProducts": true,
+      "restrictedProductMetafield": {
+        "metafieldNamespace": "dtails_b2b_portal",
+        "metafieldKey": "restricted_group_name"
+      },
+      "restrictedCustomerMetafield": {
+        "metafieldNamespace": "dtails_b2b_portal",
+        "metafieldKey": "allowed_product_groups"
+      }
     }
   },
   "checkoutConfiguration": {
     "minimumOrderFeeConfiguration": {
       "enable": true,
-      "feeShopifyVariantId": "7984356819196",
-      "minimumOrderPrice": [
+      "feePrices": [
         {
-          "amount": "200",
+          "amount": "1000.00",
           "currencyCode": "DKK"
         },
         {
-          "amount": "70",
+          "amount": "150",
+          "currencyCode": "EUR"
+        }
+      ],
+      "minimumOrderPrices": [
+        {
+          "amount": "500.00",
+          "currencyCode": "DKK"
+        },
+        {
+          "amount": "100",
           "currencyCode": "EUR"
         }
       ]

@@ -1,5 +1,8 @@
 {
   "identifier": "b2b_portal_automated_test",
+  "customerConfiguration": {
+    "enableCvr": false
+  },
   "discountConfiguration": {
     "customerDiscount": {
       "enable": true,
@@ -23,13 +26,25 @@
         "metafieldNamespace": "dtails_b2b_portal",
         "metafieldKey": "allow_single_units"
       }
+    },
+    "productConfiguration": {
+      "enableRestrictedProducts": false
     }
   },
   "checkoutConfiguration": {
     "minimumOrderFeeConfiguration": {
       "enable": true,
-      "feeShopifyVariantId": "7984356819196",
-      "minimumOrderPrice": [
+      "feePrices": [
+        {
+          "amount": "1000.00",
+          "currencyCode": "DKK"
+        },
+        {
+          "amount": "150",
+          "currencyCode": "EUR"
+        }
+      ],
+      "minimumOrderPrices": [
         {
           "amount": "200",
           "currencyCode": "DKK"

@@ -1,5 +1,8 @@
 {
   "identifier": "rosemunde",
+  "customerConfiguration": {
+    "enableCvr": false
+  },
   "discountConfiguration": {
     "customerDiscount": {
       "enable": false
@@ -11,6 +14,9 @@
   "cartConfiguration": {
     "customerConfiguration": {
       "enableSingleUnits": false
+    },
+    "productConfiguration": {
+      "enableRestrictedProducts": false
     }
   },
   "checkoutConfiguration": {

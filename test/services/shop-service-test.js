@@ -3,10 +3,6 @@ import { Server, Model } from '@dtails/toolbox-backend'
 import { ShopifyToken, App } from 'models'
 import { softDeleteShopData } from '../../src/lib/shop-service'
 
-test('When fail, then Heroku push fails', async t => {
-  t.true(true)
-})
-/*
 test.before(async t => {
   Server.init({ withCors: false })
   Server.initModel(Model, { debug: false })
@@ -25,4 +21,3 @@ test('When shop is soft deleted, then shop uninstall at timestamp is set', async
   t.not(softDeletedShop.uninstalledAt, undefined)
   t.true(true)
 })
-*/
