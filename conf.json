@@ -1,0 +1,27 @@
+{
+  "identifier": "louise",
+  "customerConfiguration": {
+    "enableCvr": false
+  },
+  "discountConfiguration": {
+    "customerDiscount": {
+      "enable": false
+    },
+    "productDiscount": {
+      "enable": false
+    }
+  },
+  "cartConfiguration": {
+    "customerConfiguration": {
+      "enableSingleUnits": false
+    },
+    "productConfiguration": {
+      "enableRestrictedProducts": false
+    }
+  },
+  "checkoutConfiguration": {
+    "minimumOrderFeeConfiguration": {
+      "enable": false
+    }
+  }
+}
