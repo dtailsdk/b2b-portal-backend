@@ -15,7 +15,7 @@ import { computeSignature } from '../lib/security-service'
  */
 async function getToken(req, res) {
   try {
-    const dbShopName = req.headers['x-shop-domain'].replace('.myshopify.com', '')
+    const dbShopName = req.query.shop.replace('.myshopify.com', '')
     const shop = await ShopifyToken.query().withGraphJoined('app').findOne({ shop: dbShopName })
     const appSecret = shop.app.shopifyAppSecret
 
