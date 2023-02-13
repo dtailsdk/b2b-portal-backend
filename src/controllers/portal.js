@@ -17,6 +17,7 @@ import { delay } from '@dtails/toolbox-backend'
  */
 async function getToken(req, res) {
   try {
+    const storeName = req.query.shop
     const dbShopName = req.query.shop.replace('.myshopify.com', '')
     const shop = await ShopifyToken.query().withGraphJoined('app').findOne({ shop: dbShopName })
     const appSecret = shop.app.shopifyAppSecret
@@ -53,7 +54,7 @@ async function getShipping(req, res) {
   const customer = await store.api().customer.getById(customerId)
   const draftOrder = convertToDraftOrder(customerId, customer.email, cart, address)
   const shippingMethod = await getShippingForOrder(store.api(), draftOrder)
-  
+
   res.send(shippingMethod)
 }
 
@@ -65,7 +66,7 @@ async function createOrderFromCart(req, res) {
   const customer = await store.api().customer.getById(customerId)
   const draftOrder = convertToDraftOrder(customerId, customer.email, cart, address)
   const order = await createOrder(store.api(), draftOrder)
-  
+
   await delay(5000) //Wait 5 seconds, to be sure the order has been created locally
   return res.json(order)
 }
@@ -95,7 +96,7 @@ async function authenticateToken(req, res, next) {
     console.log('TOKEN', payload)
     req.customerId = payload.customerId
     req.storeName = payload.storeName
-    
+
     next()
   })
 }
@@ -135,7 +136,7 @@ export default function init() {
   router
     .route('/products')
     .get(authenticateToken, getProducts)
-    .all(Server.middleware.methodNotAllowed)  
+    .all(Server.middleware.methodNotAllowed)
 
   return router
 }
