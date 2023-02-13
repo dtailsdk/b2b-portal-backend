@@ -4,6 +4,11 @@ import { ShopifyToken } from 'models'
 import { setShopMetafield, createDefinedMetafields } from './metafield-service'
 import { validateWebhooks } from './webhook-service'
 
+export async function getStoreByName(storeName) {
+  const store = await ShopifyToken.q.where({ shop: storeName.replace('.myshopify.com', '') }).first()
+  return store
+}
+
 export async function softDeleteShopData(dbShop) {
   if (dbShop != null) {
     log(`Shop exists in DB - going to mark shop ${dbShop.shop} as uninstalled`)

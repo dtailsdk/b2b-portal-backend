@@ -64,7 +64,7 @@ async function updateProductsForStore(storeId, productIds) {
   const store = await ShopifyToken.q.findOne({ id: storeId })
   const idQuery = productIds.map((id) => { return `id:${id}`}).join(' OR ')
   const preparedBulkQuery = store.api().product.prepareBulkQuery('products', DB_PRODUCT_MODEL, idQuery)
-  const products = await store.api().product.runBulkQuery(preparedBulkQuery, true)
+  const products = await store.api().product.runBulkQuery(preparedBulkQuery, true, 'Product')
   for (let i = 0; i < products.length; i++) {
     const product = products[i]
     await createOrUpdateProduct(store, product)

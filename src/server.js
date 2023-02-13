@@ -49,6 +49,7 @@ App.query().then(
       models: [],
       tenant_migrations: [],
       scope: [
+        'read_markets',
         'read_orders',
         'write_products',
         'write_draft_orders',
