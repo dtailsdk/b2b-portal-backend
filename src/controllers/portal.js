@@ -1,5 +1,5 @@
 import { Server } from '@dtails/toolbox-backend'
-import { log } from '@dtails/logger'
+import { log, trace } from '@dtails/logger'
 import { ShopifyToken } from 'models'
 import { getEnvironment } from '@dtails/toolbox-backend'
 import querystring from 'querystring'
@@ -17,8 +17,7 @@ import { delay } from '@dtails/toolbox-backend'
  */
 async function getToken(req, res) {
   try {
-    const storeName = req.headers['x-shop-domain']
-    const dbShopName = storeName.replace('.myshopify.com', '')
+    const dbShopName = req.query.shop.replace('.myshopify.com', '')
     const shop = await ShopifyToken.query().withGraphJoined('app').findOne({ shop: dbShopName })
     const appSecret = shop.app.shopifyAppSecret
     const originalQuerystring = req.url.substring(req.url.indexOf('?') + 1)

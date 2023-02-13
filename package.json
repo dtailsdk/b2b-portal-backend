@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "The backend for the dtails B2B portal",
   "author": "D.TAILS Sysadmin <support@dtails.dk>",
+  "engines": {
+    "node": "16.14.0"
+  },
   "scripts": {
     "dev": "nodemon --watch .env --watch knexfile.js --watch .babelrc --watch package.json --watch src src/server.js --exec babel-node",
     "build": "babel src -d dist",
@@ -16,7 +19,10 @@
     "db:create": "createdb b2b_portal_test",
     "db:drop": "dropdb b2b_portal_test",
     "db:reset": "npm-run-all db:drop db:create migrate:latest seed:run",
-    "test": "export NODE_ENV=test && npm run db:reset && ava --watch  --verbose --timeout 100000",
+    "test": "export NODE_ENV=test && ava --watch  --verbose --timeout 100000",
+    "test:setup": "npm-run-all db:drop db:create migrate:latest seed:run",
+    "test:local": "export NODE_ENV=test && npm run db:reset && ava --watch  --verbose --timeout 100000",
+    "louise": "echo hej",
     "testonce": "ava",
     "validate-webhooks": "npm run build && NODE_ENV=production node dist/tasks/scheduled/validate-webhooks.js",
     "sync-all-products": "npm run build && NODE_ENV=production node dist/tasks/scheduled/sync-all-products.js",

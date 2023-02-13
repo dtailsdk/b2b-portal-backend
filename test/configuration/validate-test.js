@@ -2,12 +2,47 @@ import test from 'ava'
 import fs from 'fs-extra'
 import { validateConfiguration } from '../../src/lib/configuration-service'
 
-test('When discount configuration is left out, then configuration is not valid', async t => {
+test('When customer configuration is left out, then configuration is not valid', async t => {
   const configuration = {
     "identifier": "customer_app_identifier",
+    "discountConfiguration": {
+      "customerDiscount": {
+        "enable": false
+      },
+      "productDiscount": {
+        "enable": false
+      }
+    },
     "cartConfiguration": {
       "customerConfiguration": {
         "enableSingleUnits": false
+      },
+      "productConfiguration": {
+        "enableRestrictedProducts": false
+      }
+    },
+    "checkoutConfiguration": {
+      "minimumOrderFeeConfiguration": {
+        "enable": false
+      }
+    }
+  }
+  const error = await t.throwsAsync(async () => validateConfiguration(configuration))
+  t.is(error.message, 'data must have required property \'customerConfiguration\'')
+})
+
+test('When discount configuration is left out, then configuration is not valid', async t => {
+  const configuration = {
+    "identifier": "customer_app_identifier",
+    "customerConfiguration": {
+      "enableCvr": false
+    },
+    "cartConfiguration": {
+      "customerConfiguration": {
+        "enableSingleUnits": false
+      },
+      "productConfiguration": {
+        "enableRestrictedProducts": false
       }
     },
     "checkoutConfiguration": {
@@ -23,6 +58,9 @@ test('When discount configuration is left out, then configuration is not valid',
 test('When cart configuration is left out, then configuration is not valid', async t => {
   const configuration = {
     "identifier": "customer_app_identifier",
+    "customerConfiguration": {
+      "enableCvr": false
+    },
     "discountConfiguration": {
       "customerDiscount": {
         "enable": false
@@ -44,6 +82,9 @@ test('When cart configuration is left out, then configuration is not valid', asy
 test('When checkout configuration is left out, then configuration is not valid', async t => {
   const configuration = {
     "identifier": "customer_app_identifier",
+    "customerConfiguration": {
+      "enableCvr": false
+    },
     "discountConfiguration": {
       "customerDiscount": {
         "enable": false
@@ -55,6 +96,9 @@ test('When checkout configuration is left out, then configuration is not valid',
     "cartConfiguration": {
       "customerConfiguration": {
         "enableSingleUnits": false
+      },
+      "productConfiguration": {
+        "enableRestrictedProducts": false
       }
     }
   }
@@ -65,6 +109,9 @@ test('When checkout configuration is left out, then configuration is not valid',
 test('When customer discount is enabled but related metafield is not defined, then configuration is not valid', async t => {
   const configuration = {
     "identifier": "customer_app_identifier",
+    "customerConfiguration": {
+      "enableCvr": false
+    },
     "discountConfiguration": {
       "customerDiscount": {
         "enable": true
@@ -76,6 +123,9 @@ test('When customer discount is enabled but related metafield is not defined, th
     "cartConfiguration": {
       "customerConfiguration": {
         "enableSingleUnits": false
+      },
+      "productConfiguration": {
+        "enableRestrictedProducts": false
       }
     },
     "checkoutConfiguration": {
@@ -91,6 +141,9 @@ test('When customer discount is enabled but related metafield is not defined, th
 test('When single unit purchase is enabled but related metafield is not defined, then configuration is not valid', async t => {
   const configuration = {
     "identifier": "customer_app_identifier",
+    "customerConfiguration": {
+      "enableCvr": false
+    },
     "discountConfiguration": {
       "customerDiscount": {
         "enable": false
@@ -102,6 +155,9 @@ test('When single unit purchase is enabled but related metafield is not defined,
     "cartConfiguration": {
       "customerConfiguration": {
         "enableSingleUnits": true,
+      },
+      "productConfiguration": {
+        "enableRestrictedProducts": false
       }
     },
     "checkoutConfiguration": {
@@ -114,9 +170,12 @@ test('When single unit purchase is enabled but related metafield is not defined,
   t.is(error.message, 'data/cartConfiguration/customerConfiguration must have required property \'singleUnitsMetafield\'')
 })
 
-test('When minimum order configuration is enabled and fee variant id is not defined, then configuration is not valid', async t => {
+test('When minimum order configuration is enabled and fee prices are not defined, then configuration is not valid', async t => {
   const configuration = {
     "identifier": "customer_app_identifier",
+    "customerConfiguration": {
+      "enableCvr": false
+    },
     "discountConfiguration": {
       "customerDiscount": {
         "enable": false
@@ -128,12 +187,15 @@ test('When minimum order configuration is enabled and fee variant id is not defi
     "cartConfiguration": {
       "customerConfiguration": {
         "enableSingleUnits": false
+      },
+      "productConfiguration": {
+        "enableRestrictedProducts": false
       }
     },
     "checkoutConfiguration": {
       "minimumOrderFeeConfiguration": {
         "enable": true,
-        "minimumOrderPrice": [
+        "minimumOrderPrices": [
           {
             "amount": "200.00",
             "currencyCode": "DKK"
@@ -147,12 +209,15 @@ test('When minimum order configuration is enabled and fee variant id is not defi
     }
   }
   const error = await t.throwsAsync(async () => validateConfiguration(configuration))
-  t.is(error.message, 'data/checkoutConfiguration/minimumOrderFeeConfiguration must have required property \'feeShopifyVariantId\'')
+  t.is(error.message, 'data/checkoutConfiguration/minimumOrderFeeConfiguration must have required property \'feePrices\'')
 })
 
 test('When minimum order configuration is enabled and minimum order amounts are not defined, then configuration is not valid', async t => {
   const configuration = {
     "identifier": "customer_app_identifier",
+    "customerConfiguration": {
+      "enableCvr": false
+    },
     "discountConfiguration": {
       "customerDiscount": {
         "enable": false
@@ -164,23 +229,38 @@ test('When minimum order configuration is enabled and minimum order amounts are 
     "cartConfiguration": {
       "customerConfiguration": {
         "enableSingleUnits": false
+      },
+      "productConfiguration": {
+        "enableRestrictedProducts": false
       }
     },
     "checkoutConfiguration": {
       "minimumOrderFeeConfiguration": {
         "enable": true,
-        "feeShopifyVariantId": "7984356819196",
-      }
+        "feePrices": [
+          {
+            "amount": "200.00",
+            "currencyCode": "DKK"
+          },
+          {
+            "amount": "70",
+            "currencyCode": "EUR"
+          }
+        ]
+      },
     }
   }
   const error = await t.throwsAsync(async () => validateConfiguration(configuration))
   t.log('ENV->', process.env.NODE_ENV)
-  t.is(error.message, 'data/checkoutConfiguration/minimumOrderFeeConfiguration must have required property \'minimumOrderPrice\'')
+  t.is(error.message, 'data/checkoutConfiguration/minimumOrderFeeConfiguration must have required property \'minimumOrderPrices\'')
 })
 
 test('When product discount is enabled and metafield is not defined, then configuration is not valid', async t => {
   const configuration = {
     "identifier": "customer_app_identifier",
+    "customerConfiguration": {
+      "enableCvr": false
+    },
     "discountConfiguration": {
       "customerDiscount": {
         "enable": false
@@ -192,6 +272,9 @@ test('When product discount is enabled and metafield is not defined, then config
     "cartConfiguration": {
       "customerConfiguration": {
         "enableSingleUnits": false
+      },
+      "productConfiguration": {
+        "enableRestrictedProducts": false
       }
     },
     "checkoutConfiguration": {
@@ -207,6 +290,9 @@ test('When product discount is enabled and metafield is not defined, then config
 
 test('When identifier is not defined, then configuration is not valid', async t => {
   const configuration = {
+    "customerConfiguration": {
+      "enableCvr": false
+    },
     "discountConfiguration": {
       "customerDiscount": {
         "enable": false
@@ -218,6 +304,9 @@ test('When identifier is not defined, then configuration is not valid', async t 
     "cartConfiguration": {
       "customerConfiguration": {
         "enableSingleUnits": false
+      },
+      "productConfiguration": {
+        "enableRestrictedProducts": false
       }
     },
     "checkoutConfiguration": {
