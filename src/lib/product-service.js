@@ -1,6 +1,6 @@
 import { Product, ProductVariant, Webhook, ShopifyToken } from 'models'
 import { groupBy } from 'lodash'
-import { DB_PRODUCT_MODEL } from '@dtails/shopify-api';
+import { DB_PRODUCT_MODEL } from '@dtails/shopify-api'
 
 export async function processProductJobs(jobs) {
   //1. Fetch all webhooks
@@ -58,6 +58,11 @@ export async function processProductJobs(jobs) {
       //TODO: Log error in logger library
     }
   }*/
+}
+
+export async function getProductsWithoutDiscount(storeId) {
+  const products = await Product.q.where({'products.store_id': storeId}).whereJsonSupersetOf('products.data:metafields', [{key: 'disallow_discount'}, {value: 'true'}]).withGraphJoined('variants')
+  return products
 }
 
 async function updateProductsForStore(storeId, productIds) {

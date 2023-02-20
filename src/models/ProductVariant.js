@@ -12,7 +12,7 @@ class ProductVariant extends Model {
   static relationMappings = {
     product: {
       relation: Model.BelongsToOneRelation,
-      modelClass: `${__dirname}/ShopifyProduct`,
+      modelClass: `${__dirname}/Product`,
       join: {
         from: [
           'product_variants.store_id',

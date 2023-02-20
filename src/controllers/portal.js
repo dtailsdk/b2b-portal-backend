@@ -54,7 +54,7 @@ async function getShipping(req, res) {
   const store = await getStoreByName(req.storeName)
   const customerId = req.customerId
   const customer = await getCustomerById(store, customerId)
-  const draftOrder = convertToDraftOrder(customer, cart, address)
+  const draftOrder = await convertToDraftOrder(customer, cart, address, store)
   const shippingMethod = await getShippingForOrder(store.api(), draftOrder)
 
   res.send(shippingMethod)
@@ -66,7 +66,7 @@ async function createOrderFromCart(req, res) {
   const store = await getStoreByName(req.storeName)
   const customerId = req.customerId
   const customer = await getCustomerById(store, customerId)
-  const draftOrder = convertToDraftOrder(customer, cart, address)
+  const draftOrder = await convertToDraftOrder(customer, cart, address, store)
   const order = await createOrder(store.api(), draftOrder)
 
   await delay(5000) //Wait 5 seconds, to be sure the order has been created locally
