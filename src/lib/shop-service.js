@@ -5,7 +5,7 @@ import { setShopMetafield, createDefinedMetafields } from './metafield-service'
 import { validateWebhooks } from './webhook-service'
 
 export async function getStoreByName(storeName) {
-  const store = await ShopifyToken.q.where({ shop: storeName.replace('.myshopify.com', '') }).first()
+  const store = await ShopifyToken.q.where({ shop: storeName.replace('.myshopify.com', '') }).withGraphJoined('app').first()
   return store
 }
 

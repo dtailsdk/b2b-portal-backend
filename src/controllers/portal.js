@@ -8,6 +8,7 @@ import { computeSignature } from '../lib/security-service'
 import { getStoreByName } from '../lib/shop-service'
 import { convertToDraftOrder, getShippingForOrder, createOrder } from '../lib/order-service'
 import { delay } from '@dtails/toolbox-backend'
+import { getCustomerById } from '../lib/customer-service'
 /**
  * Controller for the calls from the B2B portal
  */
@@ -42,7 +43,8 @@ async function getToken(req, res) {
 
 async function getCustomer(req, res) {
   const store = await getStoreByName(req.storeName)
-  const customer = await store.api().customer.getById(req.customerId)
+  //const customer = await store.api().customer.getById(req.customerId)
+  const customer = await getCustomerById(store, req.customerId)
   return res.send(customer)
 }
 
@@ -51,8 +53,8 @@ async function getShipping(req, res) {
   const { cart, address} = req.body
   const store = await getStoreByName(req.storeName)
   const customerId = req.customerId
-  const customer = await store.api().customer.getById(customerId)
-  const draftOrder = convertToDraftOrder(customerId, customer.email, cart, address)
+  const customer = await getCustomerById(store, customerId)
+  const draftOrder = convertToDraftOrder(customer, cart, address)
   const shippingMethod = await getShippingForOrder(store.api(), draftOrder)
 
   res.send(shippingMethod)
@@ -63,8 +65,8 @@ async function createOrderFromCart(req, res) {
   const { cart, address} = req.body
   const store = await getStoreByName(req.storeName)
   const customerId = req.customerId
-  const customer = await store.api().customer.getById(customerId)
-  const draftOrder = convertToDraftOrder(customerId, customer.email, cart, address)
+  const customer = await getCustomerById(store, customerId)
+  const draftOrder = convertToDraftOrder(customer, cart, address)
   const order = await createOrder(store.api(), draftOrder)
 
   await delay(5000) //Wait 5 seconds, to be sure the order has been created locally

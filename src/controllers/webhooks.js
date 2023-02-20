@@ -69,7 +69,7 @@ async function queueWebhook(req, res) {
   }
   let webhookEvent = await Webhook.q.where({ topic, hmac }).first()
   if (webhookEvent) {
-    console.log('Webhook event already exists')
+    console.log('Webhook event already exists: '. topic, data.id)
     return res.status(200)
   }
   
