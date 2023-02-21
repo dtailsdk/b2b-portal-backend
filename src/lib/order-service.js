@@ -7,7 +7,7 @@ export const MARKET_CURRENCY_MAP = { //TODO: Pull from Shopify
   'EUR' : 'DE',
   'SEK' : 'SE',
   'NOK' : 'NO',
-  'USD' : 'US' 
+  'USD' : 'US'
  }
 
 export async function convertToDraftOrder(customer, cart, address, store) {
@@ -16,21 +16,21 @@ export async function convertToDraftOrder(customer, cart, address, store) {
     address2: address.address2 ? address.address2 : '',
     city: address.city ? address.city : '',
     company: address.company ? address.company : '',
-    countryCode: address.countryCode ? address.countryCode : '',
+    countryCode: address.countryCodeV2 ? address.countryCodeV2 : '',
     firstName: address.firstName ? address.firstName : '',
     lastName: address.lastName ? address.lastName : '',
     phone: address.phone ? address.phone : '',
     province: address.province ? address.province : '',
     zip: address.zip ? address.zip : ''
   }
-  
+
   const currencyCode = cart.currency.toUpperCase()
   const marketRegionCountryCode = MARKET_CURRENCY_MAP[currencyCode] ? MARKET_CURRENCY_MAP[currencyCode] : 'DK'
 
   const productsWithoutDiscount = await getProductsWithoutDiscount(store.id)
 
   let lineItems = map(cart.items, (lineItem) => {
-    let orderLineItem = { 
+    let orderLineItem = {
       variantId: `gid://shopify/ProductVariant/${lineItem.variant_id}`,
       quantity: lineItem.quantity
     }
