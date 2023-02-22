@@ -1,0 +1,71 @@
+{
+  "identifier": "b2b_portal_staging",
+  "customerConfiguration": {
+    "enableCvr": true,
+    "cvrMetafield": {
+      "metafieldNamespace": "custom",
+      "metafieldKey": "cvr"
+    }
+  },
+  "discountConfiguration": {
+    "customerDiscount": {
+      "enable": true,
+      "percentageMetafield": {
+        "metafieldNamespace": "custom",
+        "metafieldKey": "line_item_discount"
+      }
+    },
+    "productDiscount": {
+      "enable": true,
+      "discountDisallowedMetafield": {
+        "metafieldNamespace": "custom",
+        "metafieldKey": "line_item_discount_disallowed"
+      }
+    }
+  },
+  "cartConfiguration": {
+    "customerConfiguration": {
+      "enableSingleUnits": true,
+      "singleUnitsMetafield": {
+        "metafieldNamespace": "custom",
+        "metafieldKey": "brake_colli_allowed"
+      }
+    },
+    "productConfiguration": {
+      "enableRestrictedProducts": true,
+      "restrictedProductMetafield": {
+        "metafieldNamespace": "custom",
+        "metafieldKey": "product_group"
+      },
+      "restrictedCustomerMetafield": {
+        "metafieldNamespace": "custom",
+        "metafieldKey": "allow_product_group"
+      }
+    }
+  },
+  "checkoutConfiguration": {
+    "minimumOrderFeeConfiguration": {
+      "enable": true,
+      "feePrices": [
+        {
+          "amount": "1000.00",
+          "currencyCode": "DKK"
+        },
+        {
+          "amount": "150",
+          "currencyCode": "EUR"
+        }
+      ],
+      "minimumOrderPrices": [
+        {
+          "amount": "500.00",
+          "currencyCode": "DKK"
+        },
+        {
+          "amount": "100",
+          "currencyCode": "EUR"
+        }
+      ]
+    }
+  }
+}
