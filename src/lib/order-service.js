@@ -16,7 +16,7 @@ export async function convertToDraftOrder(customer, cart, address, store) {
     address2: address.address2 ? address.address2 : '',
     city: address.city ? address.city : '',
     company: address.company ? address.company : '',
-    countryCode: address.countryCode ? address.countryCode : '',
+    countryCode: address.countryCodeV2 ? address.countryCodeV2 : '',
     firstName: address.firstName ? address.firstName : '',
     lastName: address.lastName ? address.lastName : '',
     phone: address.phone ? address.phone : '',
