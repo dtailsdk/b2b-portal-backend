@@ -54,7 +54,7 @@ async function queueWebhook(req, res) {
   const appSecret = shop.app.shopifyAppSecret
   
   if (!verifyShopifyWebhook(appSecret, req, req.rawBody)) {
-    return res.status(401)
+    return res.sendStatus(401)
   }
   
   if (!queueSender) {
@@ -70,7 +70,7 @@ async function queueWebhook(req, res) {
   let webhookEvent = await Webhook.q.where({ topic, hmac }).first()
   if (webhookEvent) {
     console.log('Webhook event already exists: '. topic, data.id)
-    return res.status(200)
+    return res.sendStatus(200)
   }
   
   webhookEvent = await Webhook.q.insert(webhook)
@@ -89,7 +89,7 @@ async function queueWebhook(req, res) {
 
   webhookEvent.queuedAt = moment()
   await Webhook.q.patch(webhookEvent).where({id: webhookEvent.id})
-  res.status(200)
+  res.sendStatus(200)
 
 }
 
