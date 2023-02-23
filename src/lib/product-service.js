@@ -78,7 +78,7 @@ async function updateProductsForStore(storeId, productIds) {
 
 export async function syncAllProducts(storeId) {
   const store = await ShopifyToken.q.findOne({ id: storeId })
-  const preparedBulkQuery = store.api().product.prepareBulkQuery('products', DB_PRODUCT_MODEL, `created_at>:'2020-01-01'`)
+  const preparedBulkQuery = store.api().product.prepareBulkQuery('products', DB_PRODUCT_MODEL)
   console.log(`Fetching all products from store: ${store.shop}`)
   const products = await store.api().product.runBulkQuery(preparedBulkQuery, true, 'Product')
   console.log(`Found ${products.length} products, now syncing`)
@@ -89,7 +89,7 @@ export async function syncAllProducts(storeId) {
 }
 
 export async function createOrUpdateProduct(store, product) {
-  const productId = product.id.replace('gid://shopify/Product/', '')
+  const productId = product.id.split('/').pop()
   const dbProduct = await Product.q.findOne({ store_id: store.id, product_id: productId })
   const variants = product.variants
   if (dbProduct) {
@@ -103,7 +103,7 @@ export async function createOrUpdateProduct(store, product) {
     }).where({ product_id: productId })
 
     for (const variant of variants) {
-      const variantId = variant.id.replace('gid://shopify/ProductVariant/', '')
+      const variantId = variant.id.split('/').pop()
       let existingVariant = await ProductVariant.q.where({store_id: store.id, variant_id: variantId}).first()
       if (existingVariant) {
         await ProductVariant.q.update({
@@ -138,7 +138,7 @@ export async function createOrUpdateProduct(store, product) {
     })
 
     for (const variant of variants) {
-      const variantId = variant.id.replace('gid://shopify/ProductVariant/', '')
+      const variantId = variant.id.split('/').pop()
       await ProductVariant.q.insert({
         store_id: store.id,
         product_id: productId,
