@@ -70,9 +70,15 @@ async function updateProductsForStore(storeId, productIds) {
   const idQuery = productIds.map((id) => { return `id:${id}`}).join(' OR ')
   const preparedBulkQuery = store.api().product.prepareBulkQuery('products', DB_PRODUCT_MODEL, idQuery)
   const products = await store.api().product.runBulkQuery(preparedBulkQuery, true, 'Product')
+  console.log('PRODUCTS JSON ', JSON.stringify(products, null, 2))
+
   for (let i = 0; i < products.length; i++) {
     const product = products[i]
-    await createOrUpdateProduct(store, product)
+    try {
+      await createOrUpdateProduct(store, product)
+    } catch (error) {
+      console.log('error updating product', JSON.stringify(product, null,2 ), error)
+    }
   } 
 }
 
