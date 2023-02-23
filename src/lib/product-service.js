@@ -87,6 +87,7 @@ export async function syncAllProducts(storeId) {
   const preparedBulkQuery = store.api().product.prepareBulkQuery('products', DB_PRODUCT_MODEL)
   console.log(`Fetching all products from store: ${store.shop}`)
   const products = await store.api().product.runBulkQuery(preparedBulkQuery, true, 'Product')
+  console.log('PRODUCTS JSON ', JSON.stringify(products, null, 2))
   console.log(`Found ${products.length} products, now syncing`)
   for (let i = 0; i < products.length; i++) {
     const product = products[i]
