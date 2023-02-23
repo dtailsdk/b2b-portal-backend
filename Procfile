@@ -1,2 +1,2 @@
 web: npm run start-web
-worker: npm run start-task
+worker: npm run queue-worker
