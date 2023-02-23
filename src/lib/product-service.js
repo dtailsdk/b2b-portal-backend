@@ -90,7 +90,11 @@ export async function syncAllProducts(storeId) {
   console.log(`Found ${products.length} products, now syncing`)
   for (let i = 0; i < products.length; i++) {
     const product = products[i]
-    await createOrUpdateProduct(store, product)
+    try {
+      await createOrUpdateProduct(store, product)
+    } catch (error) {
+      console.log('error updating product', JSON.stringify(product, null,2 ), error)
+    }
   } 
 }
 
