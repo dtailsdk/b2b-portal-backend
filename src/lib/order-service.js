@@ -37,7 +37,8 @@ export async function convertToDraftOrder(customer, cart, address, store) {
     if (customer.discountPercentage && !disallowDiscountForVariant(lineItem.variant_id, productsWithoutDiscount)) {
       console.log('customer.discountPercentage', customer.discountPercentage, parseFloat(customer.discountPercentage) / 100)
       const percentage = parseFloat(customer.discountPercentage) / 100
-      const lineDiscount = lineItem.line_price * percentage
+      const lineDiscount = (lineItem.line_price / 100) * percentage
+      console.log('line_price', lineItem.line_price, 'lineDiscount', lineDiscount, parseFloat(lineDiscount.toFixed(2)))
       orderLineItem.appliedDiscount = {
         valueType: 'FIXED_AMOUNT',
         value: parseFloat(lineDiscount.toFixed(2)),
