@@ -71,3 +71,30 @@ export async function getConfigurationByShop(dbShop) {
   }
   return allConfigurations.get(dbShop.app.identifier)
 }
+
+export async function getMinimumOrderValue(dbShop, currencyCode) {
+  const configuration = await getConfigurationByShop(dbShop)
+  if (configuration.checkoutConfiguration && configuration.checkoutConfiguration.minimumOrderFeeConfiguration && configuration.checkoutConfiguration.minimumOrderFeeConfiguration.enable) {
+    const minOrderConfig = configuration.checkoutConfiguration.minimumOrderFeeConfiguration
+    const minOrderValue = minOrderConfig.minimumOrderPrices.find((price) => {
+      console.log('getMinimumOrderValue', price, currencyCode)
+      return price.currencyCode.toUpperCase() == currencyCode.toUpperCase()
+    })
+    return parseFloat(minOrderValue.amount)
+  } else {
+    return 0
+  }
+}
+
+export async function getMinimumOrderFee(dbShop, currencyCode) {
+  const configuration = await getConfigurationByShop(dbShop)
+  if (configuration.checkoutConfiguration && configuration.checkoutConfiguration.minimumOrderFeeConfiguration && configuration.checkoutConfiguration.minimumOrderFeeConfiguration.enable) {
+    const minOrderConfig = configuration.checkoutConfiguration.minimumOrderFeeConfiguration
+    const minOrderFee = minOrderConfig.feePrices.find((price) => {
+      return price.currencyCode.toUpperCase() == currencyCode.toUpperCase()
+    })
+    return parseFloat(minOrderFee.amount)
+  } else {
+    return 0
+  }
+}
