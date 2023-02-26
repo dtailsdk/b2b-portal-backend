@@ -81,7 +81,7 @@ export async function convertToDraftOrder(customer, cart, address, store) {
   const shipping = await getShippingForOrder(store.api(), draftOrderInput)
   if (shipping) {
     draftOrderInput.shippingLine = {
-      handle: shipping.handle,
+      //handle: shipping.handle,
       title: shipping.title,
       price: shipping.price.amount
     }
