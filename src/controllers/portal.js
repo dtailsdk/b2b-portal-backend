@@ -67,6 +67,15 @@ async function createOrderFromCart(req, res) {
   const customerId = req.customerId
   const customer = await getCustomerById(store, customerId)
   const draftOrder = await convertToDraftOrder(customer, cart, address, store)
+  const shipping = await getShippingForOrder(store.api(), draftOrderInput)
+  if (shipping) {
+    draftOrder.shippingLine = {
+      handle: shipping.handle,
+      title: shipping.title,
+      price: shipping.price.amount
+    }
+  }
+  console.log('Creating draft order', JSON.stringify(draftOrder, null, 2))
   const order = await createOrder(store.api(), draftOrder)
 
   await delay(5000) //Wait 5 seconds, to be sure the order has been created locally
