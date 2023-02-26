@@ -78,15 +78,6 @@ export async function convertToDraftOrder(customer, cart, address, store) {
     }
   }
 
-  const shipping = await getShippingForOrder(store.api(), draftOrderInput)
-  if (shipping) {
-    draftOrderInput.shippingLine = {
-      //handle: shipping.handle,
-      title: shipping.title,
-      price: shipping.price.amount
-    }
-  }
-
   console.log('draftOrderInput', JSON.stringify(draftOrderInput, null, 2))
   return draftOrderInput
 }
