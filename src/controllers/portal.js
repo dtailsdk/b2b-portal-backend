@@ -67,9 +67,9 @@ async function createOrderFromCart(req, res) {
   const customerId = req.customerId
   const customer = await getCustomerById(store, customerId)
   const draftOrder = await convertToDraftOrder(customer, cart, address, store)
-  const shipping = await getShippingForOrder(store.api(), draftOrderInput)
+  const shipping = await getShippingForOrder(store.api(), draftOrder)
   if (shipping) {
-    draftOrder.shippingLine = {
+    draftOrder.input.shippingLine = {
       handle: shipping.handle,
       title: shipping.title,
       price: shipping.price.amount
