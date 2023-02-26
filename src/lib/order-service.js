@@ -39,11 +39,12 @@ export async function convertToDraftOrder(customer, cart, address, store) {
       variantId: `gid://shopify/ProductVariant/${lineItem.variant_id}`,
       quantity: lineItem.quantity
     }
+    const unitPrice = price / 100
     const linePrice = lineItem.line_price / 100
     let lineDiscount = 0
     if (customer.discountPercentage && !disallowDiscountForVariant(lineItem.variant_id, productsWithoutDiscount)) {
       const percentage = parseFloat(customer.discountPercentage) / 100
-      lineDiscount = linePrice * percentage
+      lineDiscount = unitPrice * percentage
       orderLineItem.appliedDiscount = {
         valueType: 'FIXED_AMOUNT',
         value: parseFloat(lineDiscount.toFixed(2)),
