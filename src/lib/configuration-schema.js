@@ -7,7 +7,7 @@ export const SCHEMA = {
     },
     customerConfiguration: {
       type: "object",
-      description: "Configuration of the customer",
+      description: "Configuration of a customer",
       if: { properties: { enableCvr: { const: true } } },
       then: { required: ["enableCvr", "cvrMetafield"] },
       else: { required: ["enableCvr"] },
@@ -19,6 +19,27 @@ export const SCHEMA = {
         cvrMetafield: {
           type: "object",
           description: "Defines the metafield on the customer where the customer CVR number can be set",
+          properties: {
+            metafieldNamespace: {
+              type: "string",
+              description: "Defines the metafield namespace",
+            },
+            metafieldKey: {
+              type: "string",
+              description: "Defines the metafield key",
+            },
+          },
+          required: ["metafieldNamespace", "metafieldKey"],
+        },
+      },
+    },
+    productConfiguration: {
+      type: "object",
+      description: "Configuration of a product",
+      properties: {
+        packageSizeMetafield: {
+          type: "object",
+          description: "Defines the metafield on the product where the size of a B2B package can be set",
           properties: {
             metafieldNamespace: {
               type: "string",
@@ -242,6 +263,6 @@ export const SCHEMA = {
       additionalProperties: false,
     },
   },
-  required: ["identifier", "customerConfiguration", "discountConfiguration", "cartConfiguration", "checkoutConfiguration"],
+  required: ["identifier", "customerConfiguration", "productConfiguration", "discountConfiguration", "cartConfiguration", "checkoutConfiguration"],
   additionalProperties: false,
 }

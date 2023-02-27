@@ -5,6 +5,12 @@ import { validateConfiguration } from '../../src/lib/configuration-service'
 test('When customer configuration is left out, then configuration is not valid', async t => {
   const configuration = {
     "identifier": "customer_app_identifier",
+    "productConfiguration": {
+      "packageSizeMetafield": {
+        "metafieldNamespace": "dtails_b2b_portal",
+        "metafieldKey": "package_size"
+      }
+    },
     "discountConfiguration": {
       "customerDiscount": {
         "enable": false
@@ -31,11 +37,86 @@ test('When customer configuration is left out, then configuration is not valid',
   t.is(error.message, 'data must have required property \'customerConfiguration\'')
 })
 
+test('When product configuration is left out, then configuration is not valid', async t => {
+  const configuration = {
+    "identifier": "customer_app_identifier",
+    "customerConfiguration": {
+      "enableCvr": false
+    },
+    "discountConfiguration": {
+      "customerDiscount": {
+        "enable": false
+      },
+      "productDiscount": {
+        "enable": false
+      }
+    },
+    "cartConfiguration": {
+      "customerConfiguration": {
+        "enableSingleUnits": false
+      },
+      "productConfiguration": {
+        "enableRestrictedProducts": false
+      }
+    },
+    "checkoutConfiguration": {
+      "minimumOrderFeeConfiguration": {
+        "enable": false
+      }
+    }
+  }
+  const error = await t.throwsAsync(async () => validateConfiguration(configuration))
+  t.is(error.message, 'data must have required property \'productConfiguration\'')
+})
+
+test('When metafield definition is left out in product configuration, then configuration is not valid', async t => {
+  const configuration = {
+    "identifier": "customer_app_identifier",
+    "customerConfiguration": {
+      "enableCvr": false
+    },
+    "productConfiguration": {
+      "packageSizeMetafield": {
+        "metafieldNamespace": "dtails_b2b_portal",
+      }
+    },
+    "discountConfiguration": {
+      "customerDiscount": {
+        "enable": false
+      },
+      "productDiscount": {
+        "enable": false
+      }
+    },
+    "cartConfiguration": {
+      "customerConfiguration": {
+        "enableSingleUnits": false
+      },
+      "productConfiguration": {
+        "enableRestrictedProducts": false
+      }
+    },
+    "checkoutConfiguration": {
+      "minimumOrderFeeConfiguration": {
+        "enable": false
+      }
+    }
+  }
+  const error = await t.throwsAsync(async () => validateConfiguration(configuration))
+  t.is(error.message, 'data/productConfiguration/packageSizeMetafield must have required property \'metafieldKey\'')
+})
+
 test('When discount configuration is left out, then configuration is not valid', async t => {
   const configuration = {
     "identifier": "customer_app_identifier",
     "customerConfiguration": {
       "enableCvr": false
+    },
+    "productConfiguration": {
+      "packageSizeMetafield": {
+        "metafieldNamespace": "dtails_b2b_portal",
+        "metafieldKey": "package_size"
+      }
     },
     "cartConfiguration": {
       "customerConfiguration": {
@@ -61,6 +142,12 @@ test('When cart configuration is left out, then configuration is not valid', asy
     "customerConfiguration": {
       "enableCvr": false
     },
+    "productConfiguration": {
+      "packageSizeMetafield": {
+        "metafieldNamespace": "dtails_b2b_portal",
+        "metafieldKey": "package_size"
+      }
+    },
     "discountConfiguration": {
       "customerDiscount": {
         "enable": false
@@ -84,6 +171,12 @@ test('When checkout configuration is left out, then configuration is not valid',
     "identifier": "customer_app_identifier",
     "customerConfiguration": {
       "enableCvr": false
+    },
+    "productConfiguration": {
+      "packageSizeMetafield": {
+        "metafieldNamespace": "dtails_b2b_portal",
+        "metafieldKey": "package_size"
+      }
     },
     "discountConfiguration": {
       "customerDiscount": {
@@ -111,6 +204,12 @@ test('When customer discount is enabled but related metafield is not defined, th
     "identifier": "customer_app_identifier",
     "customerConfiguration": {
       "enableCvr": false
+    },
+    "productConfiguration": {
+      "packageSizeMetafield": {
+        "metafieldNamespace": "dtails_b2b_portal",
+        "metafieldKey": "package_size"
+      }
     },
     "discountConfiguration": {
       "customerDiscount": {
@@ -144,6 +243,12 @@ test('When single unit purchase is enabled but related metafield is not defined,
     "customerConfiguration": {
       "enableCvr": false
     },
+    "productConfiguration": {
+      "packageSizeMetafield": {
+        "metafieldNamespace": "dtails_b2b_portal",
+        "metafieldKey": "package_size"
+      }
+    },
     "discountConfiguration": {
       "customerDiscount": {
         "enable": false
@@ -175,6 +280,12 @@ test('When minimum order configuration is enabled and fee prices are not defined
     "identifier": "customer_app_identifier",
     "customerConfiguration": {
       "enableCvr": false
+    },
+    "productConfiguration": {
+      "packageSizeMetafield": {
+        "metafieldNamespace": "dtails_b2b_portal",
+        "metafieldKey": "package_size"
+      }
     },
     "discountConfiguration": {
       "customerDiscount": {
@@ -217,6 +328,12 @@ test('When minimum order configuration is enabled and minimum order amounts are 
     "identifier": "customer_app_identifier",
     "customerConfiguration": {
       "enableCvr": false
+    },
+    "productConfiguration": {
+      "packageSizeMetafield": {
+        "metafieldNamespace": "dtails_b2b_portal",
+        "metafieldKey": "package_size"
+      }
     },
     "discountConfiguration": {
       "customerDiscount": {
@@ -261,6 +378,12 @@ test('When product discount is enabled and metafield is not defined, then config
     "customerConfiguration": {
       "enableCvr": false
     },
+    "productConfiguration": {
+      "packageSizeMetafield": {
+        "metafieldNamespace": "dtails_b2b_portal",
+        "metafieldKey": "package_size"
+      }
+    },
     "discountConfiguration": {
       "customerDiscount": {
         "enable": false
@@ -292,6 +415,12 @@ test('When identifier is not defined, then configuration is not valid', async t 
   const configuration = {
     "customerConfiguration": {
       "enableCvr": false
+    },
+    "productConfiguration": {
+      "packageSizeMetafield": {
+        "metafieldNamespace": "dtails_b2b_portal",
+        "metafieldKey": "package_size"
+      }
     },
     "discountConfiguration": {
       "customerDiscount": {
