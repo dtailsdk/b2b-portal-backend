@@ -158,7 +158,7 @@ export default function init() {
 
   router
     .route('/product')
-    .get(getProductByHandle)
+    .get(authenticateToken, getProductInfo)
     .all(Server.middleware.methodNotAllowed)
   
   router
