@@ -9,6 +9,7 @@ import { getStoreByName } from '../lib/shop-service'
 import { convertToDraftOrder, getShippingForOrder, createOrder } from '../lib/order-service'
 import { delay } from '@dtails/toolbox-backend'
 import { getCustomerById } from '../lib/customer-service'
+import { getProductByHandle } from '../lib/product-service'
 /**
  * Controller for the calls from the B2B portal
  */
@@ -58,6 +59,17 @@ async function getShipping(req, res) {
   const shippingMethod = await getShippingForOrder(store.api(), draftOrder)
 
   res.send(shippingMethod)
+}
+
+async function getProductInfo(req, res) {
+  if (!req.query.handle) {
+    return send({status: -1, message: 'No handle provided'}).status(503)
+  }
+  const product = await getProductByHandle(req.query.handle)
+  if (product) {
+    return send(product)
+  }
+  return send({status: -1, message: 'No product found'}).status(503)
 }
 
 async function createOrderFromCart(req, res) {
@@ -144,6 +156,11 @@ export default function init() {
     .post(authenticateToken, createOrderFromCart)
     .all(Server.middleware.methodNotAllowed)
 
+  router
+    .route('/product')
+    .get(getProductByHandle)
+    .all(Server.middleware.methodNotAllowed)
+  
   router
     .route('/products')
     .get(authenticateToken, getProducts)

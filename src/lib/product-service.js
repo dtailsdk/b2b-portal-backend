@@ -99,6 +99,11 @@ export async function syncAllProducts(storeId) {
   } 
 }
 
+export async function getProductByHandle(handle) {
+  const product = await Product.q.where({handle}).first()
+  return product
+}
+
 export async function createOrUpdateProduct(store, product) {
   const productId = product.id.split('/').pop()
   const dbProduct = await Product.q.findOne({ store_id: store.id, product_id: productId })
