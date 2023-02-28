@@ -63,13 +63,13 @@ async function getShipping(req, res) {
 
 async function getProductInfo(req, res) {
   if (!req.query.handle) {
-    return send({status: -1, message: 'No handle provided'}).status(503)
+    return res.send({status: -1, message: 'No handle provided'}).status(503)
   }
   const product = await getProductByHandle(req.query.handle)
   if (product) {
-    return send(product)
+    return res.json(product)
   }
-  return send({status: -1, message: 'No product found'}).status(503)
+  return res.send({status: -1, message: 'No product found'}).status(503)
 }
 
 async function createOrderFromCart(req, res) {
