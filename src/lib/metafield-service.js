@@ -9,8 +9,9 @@ export const SHOP_CONFIGURATION_KEY = 'shop_configuration'
 export const CUSTOMER_CVR_KEY = 'customer_cvr'
 export const CUSTOMER_DISCOUNT_KEY = 'customer_discount_percentage'
 export const CUSTOMER_ALLOW_SINGLE_KEY = 'allow_single_units'
-export const PRODUCT_RESTRICTED_KEY = 'restricted_group_name'
 export const CUSTOMER_RESTRICTED_KEY = 'allow_restricted_group'
+export const PRODUCT_RESTRICTED_KEY = 'restricted_group_name'
+export const PRODUCT_PACKAGE_SIZE_KEY = 'package_size'
 export const PRODUCT_DISCOUNT_DISALLOWED_KEY = 'disallow_discount'
 
 export const SHOP_METAFIELD = {
@@ -39,6 +40,13 @@ export const CUSTOMER_ALLOW_SINGLE_METAFIELD = {
   ownerType: CUSTOMER_OWNER_TYPE,
   name: 'Allow single quantity purchases'
 }
+export const CUSTOMER_RESTRICTED_METAFIELD = {
+  namespace: B2B_PORTAL_NAMESPACE,
+  key: CUSTOMER_RESTRICTED_KEY,
+  type: 'list.single_line_text_field',
+  ownerType: CUSTOMER_OWNER_TYPE,
+  name: 'Allow to buy from restricted product groups'
+}
 export const PRODUCT_RESTRICTED_METAFIELD = {
   namespace: B2B_PORTAL_NAMESPACE,
   key: PRODUCT_RESTRICTED_KEY,
@@ -46,12 +54,12 @@ export const PRODUCT_RESTRICTED_METAFIELD = {
   ownerType: PRODUCT_OWNER_TYPE,
   name: 'Restricted product group name'
 }
-export const CUSTOMER_RESTRICTED_METAFIELD = {
+export const PRODUCT_PACKAGE_SIZE_METAFIELD = {
   namespace: B2B_PORTAL_NAMESPACE,
-  key: CUSTOMER_RESTRICTED_KEY,
-  type: 'list.single_line_text_field',
-  ownerType: CUSTOMER_OWNER_TYPE,
-  name: 'Allow to buy from restricted product groups'
+  key: PRODUCT_PACKAGE_SIZE_KEY,
+  type: 'number_integer',
+  ownerType: PRODUCT_OWNER_TYPE,
+  name: 'Defines the size of a B2B package'
 }
 export const PRODUCT_DISCOUNT_DISALLOWED_METAFIELD = {
   namespace: B2B_PORTAL_NAMESPACE,
@@ -64,9 +72,9 @@ export const PRODUCT_DISCOUNT_DISALLOWED_METAFIELD = {
 export async function updateConfigurationsInShops() {
   const dbShops = await ShopifyToken.q.whereNull('uninstalledAt').withGraphFetched('app')
   for (const dbShop of dbShops) {
-    log(`Going to update shop metafield with configuration for shop ${dbShop.shop}`)
+    log(`Going to update shop metafield with configuration for shop ${dbShop.shop} and identifier ${dbShop.app.identifier}`)
     await setShopMetafield(dbShop)
-    log(`Finished updating shop metafield with configuration for shop ${dbShop.shop}`)
+    log(`Finished updating shop metafield with configuration for shop ${dbShop.shop} and identifier ${dbShop.app.identifier}`)
   }
   log(`Finished updating shop metafields for all shops`)
 }
@@ -174,6 +182,17 @@ export async function createDefinedMetafields(dbShop) {
     }
     await createIfMissing(shopifyApi, metafield, existingMetafields)
   }
+
+  log(`Package size - will create metafield if it does not already exist`)
+  const configurationMetafield = configuration.productConfiguration.packageSizeMetafield
+  const metafield = {
+    namespace: configurationMetafield.metafieldNamespace,
+    key: configurationMetafield.metafieldKey,
+    type: PRODUCT_PACKAGE_SIZE_METAFIELD.type,
+    ownerType: PRODUCT_PACKAGE_SIZE_METAFIELD.ownerType,
+    name: PRODUCT_PACKAGE_SIZE_METAFIELD.name
+  }
+  await createIfMissing(shopifyApi, metafield, existingMetafields)
 }
 
 async function createIfMissing(shopifyApi, metafield, existingMetafields) {

@@ -7,6 +7,12 @@
       "metafieldKey": "cvr"
     }
   },
+  "productConfiguration": {
+    "packageSizeMetafield": {
+      "metafieldNamespace": "custom",
+      "metafieldKey": "colli_size"
+    }
+  },
   "discountConfiguration": {
     "customerDiscount": {
       "enable": true,

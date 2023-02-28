@@ -7,6 +7,12 @@
       "metafieldKey": "cvr"
     }
   },
+  "productConfiguration": {
+    "packageSizeMetafield": {
+      "metafieldNamespace": "dtails_b2b_portal",
+      "metafieldKey": "quantity_increments"
+    }
+  },
   "discountConfiguration": {
     "customerDiscount": {
       "enable": true,

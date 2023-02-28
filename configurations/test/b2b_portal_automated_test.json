@@ -3,6 +3,12 @@
   "customerConfiguration": {
     "enableCvr": false
   },
+  "productConfiguration": {
+    "packageSizeMetafield": {
+      "metafieldNamespace": "dtails_b2b_portal",
+      "metafieldKey": "package_size"
+    }
+  },
   "discountConfiguration": {
     "customerDiscount": {
       "enable": true,
