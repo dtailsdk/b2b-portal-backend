@@ -54,7 +54,9 @@ App.query().then(
         'write_products',
         'write_draft_orders',
         'read_shipping',
-        'write_customers'
+        'write_customers',
+        'unauthenticated_read_metaobjects',
+        'unauthenticated_read_product_listings'
       ],
       embedded: true,
       create_additional_token_data: createAdditionalTokenData,
