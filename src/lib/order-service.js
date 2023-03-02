@@ -93,6 +93,7 @@ function disallowDiscountForVariant(variantId, productsWithoutDiscount) {
 
 export async function getShippingForOrder(shopifyApi, draftOrderInput) {
   const shippingMethods = await shopifyApi.draftOrder.calculate(draftOrderInput)
+  console.log('getShippingForOrder shippingMethods', JSON.stringify(shippingMethods, null, 2))
   return maxBy(shippingMethods.calculatedDraftOrder.availableShippingRates, (rate) => { return parseFloat(rate.price.amount)})
 }
 
