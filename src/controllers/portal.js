@@ -49,6 +49,12 @@ async function getCustomer(req, res) {
   return res.send(customer)
 }
 
+async function getShop(req, res) {
+  const store = await getStoreByName(req.storeName)
+  const shop = await store.api().getShop()
+  return res.send(shop)
+}
+
 async function getShipping(req, res) {
   //input: address, cart
   const { cart, address} = req.body
@@ -135,6 +141,11 @@ export default function init() {
   router
     .route('/ping')
     .get(ping)
+    .all(Server.middleware.methodNotAllowed)
+
+  router
+    .route('/get_shop')
+    .get(getShop)
     .all(Server.middleware.methodNotAllowed)
 
   /*router
