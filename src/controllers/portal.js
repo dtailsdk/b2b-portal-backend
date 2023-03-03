@@ -145,7 +145,7 @@ export default function init() {
 
   router
     .route('/get_shop')
-    .get(getShop)
+    .get(authenticateToken, getShop)
     .all(Server.middleware.methodNotAllowed)
 
   /*router
