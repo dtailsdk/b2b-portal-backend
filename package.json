@@ -45,7 +45,7 @@
   "dependencies": {
     "@dtails/logger": "^0.0.6",
     "@dtails/queue-backend": "^0.0.2",
-    "@dtails/shopify-api": "^0.0.22",
+    "@dtails/shopify-api": "^0.0.23",
     "@dtails/toolbox-backend": "^0.0.20",
     "@sentry/node": "^7.36.0",
     "@sentry/tracing": "^7.36.0",
