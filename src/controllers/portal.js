@@ -90,7 +90,7 @@ async function createOrderFromCart(req, res) {
     draftOrder.input.shippingLine = {
       shippingRateHandle: shipping.handle,
       title: shipping.title,
-      price: shipping.price.amount
+      //price: shipping.price.amount
     }
   }
   console.log('Creating draft order', JSON.stringify(draftOrder, null, 2))
