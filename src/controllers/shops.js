@@ -1,17 +1,12 @@
 import { Server } from '@dtails/toolbox-backend'
 import { log } from '@dtails/logger'
-import { ShopifyToken } from 'models'
+import { getInstalledShop } from '../lib/shop-service'
 
 //Service that does not require authorization used to decide whether to start OAuth flow for shops where app is not installed yet
 async function getShop(req, res) {
   const dbShopName = req.query.shop.replace('.myshopify.com', '')
-  const shop = await ShopifyToken.query().withGraphJoined('app').findOne({ shop: dbShopName, identifier: req.query.app, uninstalledAt: null })
-  return res.send({
-    shop: {
-      name: dbShopName
-    },
-    appInstalled: (shop && shop.uninstalledAt == null) ? true : false
-  })
+  const shopState = await getInstalledShop(dbShopName, req.query.app)
+  return res.send(shopState)
 }
 
 //Example of a service that needs to be called with an authorization header (Shopify token)

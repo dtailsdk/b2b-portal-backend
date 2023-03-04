@@ -6,6 +6,7 @@ import { App, ShopifyToken } from 'models'
 import { initializeNewShop } from './lib/shop-service'
 import controllers from './controllers'
 const { knexSnakeCaseMappers } = require('objection')
+import { getAppScopes } from './lib/shop-service'
 
 Server.init({
   withCors: true,
@@ -13,7 +14,7 @@ Server.init({
   corsBlacklist: ['/', '/app/api/shopify/auth/confirm', '/app/api/webhooks', '/app/api/webhooks/app_uninstalled', '/app/api/webhooks/customers_redact', '/app/api/webhooks/customers_data_request', '/app/api/webhooks/shop_redact', '/favicon.ico'],
   bodyParser: {
     parseRawBody: true,
-    rawBodyUrls: ['/app/api/webhooks/app_uninstalled',  '/app/api/webhooks', '/app/api/webhooks/shop_redact', '/app/api/webhooks/customers_redact', '/app/api/webhooks/customers_data_request'],
+    rawBodyUrls: ['/app/api/webhooks/app_uninstalled', '/app/api/webhooks', '/app/api/webhooks/shop_redact', '/app/api/webhooks/customers_redact', '/app/api/webhooks/customers_data_request'],
     type: ['text/plain', 'application/json']
   }
 })
@@ -48,14 +49,7 @@ App.query().then(
       knex_debug_mode,
       models: [],
       tenant_migrations: [],
-      scope: [
-        'read_markets',
-        'read_orders',
-        'write_products',
-        'write_draft_orders',
-        'read_shipping',
-        'write_customers'
-      ],
+      scope: getAppScopes(),
       embedded: true,
       create_additional_token_data: createAdditionalTokenData,
       onShopInstalled: (shop, app) => { log(shop); log('App was installed - registering webhooks for shop ' + shop.shop + ' and app "' + app); initializeNewShop(shop) },

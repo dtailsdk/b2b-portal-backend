@@ -32,3 +32,29 @@ export async function initializeNewShop(dbShop) {
   await setShopMetafield(dbShop)
   await createDefinedMetafields(dbShop)
 }
+
+export function getAppScopes() {
+  return [
+    'read_markets',
+    'read_orders',
+    'write_products',
+    'write_draft_orders',
+    'read_shipping',
+    'write_customers',
+    'write_files'
+  ]
+}
+
+export async function getInstalledShop(dbShopName, app) {
+  const shop = await ShopifyToken.query().withGraphJoined('app').findOne({ shop: dbShopName, identifier: app, uninstalledAt: null })
+  const scopesUpdated = shop.scope == getAppScopes().join(',')
+  if (!scopesUpdated){
+    log(`Scopes are NOT up to date for shop ${dbShopName} - going to request confirmation of new scopes`)
+  }
+  return {
+    shop: {
+      name: dbShopName
+    },
+    installedAndUpdated: (shop && scopesUpdated) ? true : false
+  }
+}
