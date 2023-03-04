@@ -9,6 +9,7 @@ import { getStoreByName } from '../lib/shop-service'
 import { convertToDraftOrder, getShippingForOrder, createOrder } from '../lib/order-service'
 import { delay } from '@dtails/toolbox-backend'
 import { getCustomerById } from '../lib/customer-service'
+import { getProductByHandle } from '../lib/product-service'
 /**
  * Controller for the calls from the B2B portal
  */
@@ -48,6 +49,12 @@ async function getCustomer(req, res) {
   return res.send(customer)
 }
 
+async function getShop(req, res) {
+  const store = await getStoreByName(req.storeName)
+  const shop = await store.api().getShop()
+  return res.send(shop)
+}
+
 async function getShipping(req, res) {
   //input: address, cart
   const { cart, address} = req.body
@@ -58,6 +65,17 @@ async function getShipping(req, res) {
   const shippingMethod = await getShippingForOrder(store.api(), draftOrder)
 
   res.send(shippingMethod)
+}
+
+async function getProductInfo(req, res) {
+  if (!req.query.handle) {
+    return res.send({status: -1, message: 'No handle provided'}).status(503)
+  }
+  const product = await getProductByHandle(req.query.handle)
+  if (product) {
+    return res.json(product)
+  }
+  return res.send({status: -1, message: 'No product found'}).status(503)
 }
 
 async function createOrderFromCart(req, res) {
@@ -125,6 +143,11 @@ export default function init() {
     .get(ping)
     .all(Server.middleware.methodNotAllowed)
 
+  router
+    .route('/get_shop')
+    .get(authenticateToken, getShop)
+    .all(Server.middleware.methodNotAllowed)
+
   /*router
     .route('*')
     .all(authenticateToken)*/
@@ -144,6 +167,11 @@ export default function init() {
     .post(authenticateToken, createOrderFromCart)
     .all(Server.middleware.methodNotAllowed)
 
+  router
+    .route('/product')
+    .get(authenticateToken, getProductInfo)
+    .all(Server.middleware.methodNotAllowed)
+  
   router
     .route('/products')
     .get(authenticateToken, getProducts)

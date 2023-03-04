@@ -41,14 +41,15 @@ export function getAppScopes() {
     'write_draft_orders',
     'read_shipping',
     'write_customers',
-    'write_files'
+    'unauthenticated_read_metaobjects',
+    'unauthenticated_read_product_listings'
   ]
 }
 
 export async function getInstalledShop(dbShopName, app) {
   const shop = await ShopifyToken.query().withGraphJoined('app').findOne({ shop: dbShopName, identifier: app, uninstalledAt: null })
   const scopesUpdated = shop.scope == getAppScopes().join(',')
-  if (!scopesUpdated){
+  if (!scopesUpdated) {
     log(`Scopes are NOT up to date for shop ${dbShopName} - going to request confirmation of new scopes`)
   }
   return {
