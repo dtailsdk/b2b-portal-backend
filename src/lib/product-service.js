@@ -65,6 +65,12 @@ export async function getProductsWithoutDiscount(storeId) {
   return products
 }
 
+export async function getMinimumFeeProduct(storeId) {
+  const product = await Product.q.where({'products.store_id': storeId, handle: 'minimum-order-fee'}).withGraphJoined('variants').first()
+  console.log('PRODUCT', product)
+  return product
+}
+
 async function updateProductsForStore(storeId, productIds) {
   const store = await ShopifyToken.q.findOne({ id: storeId })
   const idQuery = productIds.map((id) => { return `id:${id}`}).join(' OR ')

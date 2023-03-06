@@ -1,6 +1,6 @@
 import { map, maxBy } from 'lodash'
 import { getCustomerById } from './customer-service'
-import { getProductsWithoutDiscount } from './product-service'
+import { getProductsWithoutDiscount, getMinimumFeeProduct } from './product-service'
 import { getConfigurationByShop, getMinimumOrderFee, getMinimumOrderValue } from './configuration-service'
 
 export const MARKET_CURRENCY_MAP = { //TODO: Pull from Shopify
@@ -59,11 +59,11 @@ export async function convertToDraftOrder(customer, cart, address, store) {
   const minimumOrderValue = await getMinimumOrderValue(store, currencyCode)
   console.log('totalOrderValue', totalOrderValue, 'minimumOrderValue', minimumOrderValue)
   if (totalOrderValue < minimumOrderValue) {
-    const minimumOrderFee = await getMinimumOrderFee(store, currencyCode)
+    //const minimumOrderFee = await getMinimumOrderFee(store, currencyCode)
+    const minimumOrderFeeProduct = await getMinimumFeeProduct(store.id)
     lineItems.push({
-      title: 'Minimum order fee',
+      variantId: `gid://shopify/ProductVariant/${minimumOrderFeeProduct.variants[0].variantId}`,
       quantity: 1,
-      originalUnitPrice: minimumOrderFee
     })
   }
 
