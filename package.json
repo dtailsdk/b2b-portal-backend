@@ -46,7 +46,7 @@
     "@dtails/logger": "^0.0.6",
     "@dtails/queue-backend": "^0.0.2",
     "@dtails/shopify-api": "^0.0.25",
-    "@dtails/toolbox-backend": "^0.0.20",
+    "@dtails/toolbox-backend": "^0.0.25",
     "@sentry/node": "^7.36.0",
     "@sentry/tracing": "^7.36.0",
     "ajv": "^8.12.0",
