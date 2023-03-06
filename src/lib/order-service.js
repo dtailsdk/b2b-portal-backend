@@ -71,6 +71,7 @@ export async function convertToDraftOrder(customer, cart, address, store) {
     input: {
       customerId: customer.id,
       email: customer.email,
+      presentmentCurrencyCode: currencyCode,
       marketRegionCountryCode: marketRegionCountryCode, //TODO: How do we determine the country code, is it by getting currency and finding respective market?
       lineItems,
       shippingAddress,
