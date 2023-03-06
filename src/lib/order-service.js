@@ -103,7 +103,7 @@ export async function getShippingForOrder(shopifyApi, draftOrderInput) {
   const shippingMethods = await shopifyApi.draftOrder.calculate(draftOrderInput)
   console.log('getShippingForOrder shippingMethods', JSON.stringify(shippingMethods, null, 2))
   const applicableMethod = maxBy(shippingMethods.calculatedDraftOrder.availableShippingRates, (rate) => { return parseFloat(rate.price.amount)})
-  if (applicableMethod && applicableMethod.price.currencyCode !== shippingMethods.calculatedDraftOrder.currencyCode) {
+  if (applicableMethod && applicableMethod.price.currencyCode !== shippingMethods.calculatedDraftOrder.presentmentCurrencyCode) {
     applicableMethod.price.amount =  convert(parseFloat(applicableMethod.price.amount), applicableMethod.price.currencyCode, shippingMethods.calculatedDraftOrder.presentmentCurrencyCode)
     applicableMethod.price.amount = Math.round(applicableMethod.price.amount)
   }
