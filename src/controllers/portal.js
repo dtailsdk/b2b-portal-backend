@@ -115,7 +115,8 @@ async function createOrderFromCart(req, res) {
     customerId: `gid://shopify/Customer/${customerId}`
   }
   console.log('INPUT', JSON.stringify(input, null, 2))
-  await store.api().runQuery(customerUpdateQuery, input)
+  const addressResult = await store.api().runQuery(customerUpdateQuery, input)
+  console.log('address result', JSON.stringify(addressResult, null, 2))
 
   return res.json(orderResponse)
 }
