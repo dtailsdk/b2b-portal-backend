@@ -95,8 +95,27 @@ async function createOrderFromCart(req, res) {
   }
   console.log('Creating draft order', JSON.stringify(draftOrder, null, 2))
   const order = await createOrder(store.api(), draftOrder)
+  console.log('Order created', JSON.stringify(order, null, 2))
 
-  await delay(5000) //Wait 5 seconds, to be sure the order has been created locally
+  await delay(2000) //Wait 2 seconds, to be sure the order has been created locally
+
+  const customerUpdateQuery = `mutation customerUpdateDefaultAddress($addressId: ID!, $customerId: ID!) {
+    customerUpdateDefaultAddress(addressId: $addressId, customerId: $customerId) {
+      customer {
+       id
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }`
+  const input = {
+    addressId: order.shippingAddress.id,
+    customerId: `gid://shopify/Customer/${customerId}`
+  }
+  await store.api().runQuery(customerUpdateQuery, input)
+
   return res.json(order)
 }
 
