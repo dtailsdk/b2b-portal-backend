@@ -116,7 +116,7 @@ async function createOrderFromCart(req, res) {
   }
   await store.api().runQuery(customerUpdateQuery, input)
 
-  return res.json(order)
+  return res.json(orderResponse)
 }
 
 async function getProducts(req, res) {
