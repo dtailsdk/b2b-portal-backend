@@ -34,7 +34,7 @@
       "enableSingleUnits": true,
       "singleUnitsMetafield": {
         "metafieldNamespace": "custom",
-        "metafieldKey": "brake_colli_allowed"
+        "metafieldKey": "break_colli_allowed"
       }
     },
     "productConfiguration": {
