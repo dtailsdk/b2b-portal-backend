@@ -193,6 +193,31 @@ export const SCHEMA = {
               required: ["metafieldNamespace", "metafieldKey"],
             },
           },
+          if: { properties: { enableMinimumQuantity: { const: true } } },
+          then: { required: ["enableMinimumQuantity", "minimumQuantityMetafield"] },
+          else: { required: ["enableMinimumQuantity"] },
+          properties: {
+            enableMinimumQuantity: {
+              type: "boolean",
+              description: "Defines whether there is a minimum quantity that can be put into the cart",
+            },
+            minimumQuantityMetafield: {
+              type: "object",
+              description: "Defines the metafield on the customer that defines whether the customer is allowed to buy single units",
+              properties: {
+                metafieldNamespace: {
+                  type: "string",
+                  description: "Defines the metafield namespace",
+                },
+                metafieldKey: {
+                  type: "string",
+                  description: "Defines the metafield key",
+                },
+              },
+              required: ["metafieldNamespace", "metafieldKey"],
+            },
+          },
+          required: ["enableMinimumQuantity"],
         },
       },
       required: ["customerConfiguration", "productConfiguration"],

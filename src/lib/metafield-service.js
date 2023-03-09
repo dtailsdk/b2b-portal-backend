@@ -12,6 +12,7 @@ export const CUSTOMER_ALLOW_SINGLE_KEY = 'allow_single_units'
 export const CUSTOMER_RESTRICTED_KEY = 'allow_restricted_group'
 export const PRODUCT_RESTRICTED_KEY = 'restricted_group_name'
 export const PRODUCT_PACKAGE_SIZE_KEY = 'package_size'
+export const PRODUCT_MINIMUM_QUANTITY_KEY = 'minimum_cart_quantity'
 export const PRODUCT_DISCOUNT_DISALLOWED_KEY = 'disallow_discount'
 
 export const SHOP_METAFIELD = {
@@ -60,6 +61,13 @@ export const PRODUCT_PACKAGE_SIZE_METAFIELD = {
   type: 'number_integer',
   ownerType: PRODUCT_OWNER_TYPE,
   name: 'Defines the size of a B2B package'
+}
+export const PRODUCT_MINIMUM_QUANTITY_METAFIELD = {
+  namespace: B2B_PORTAL_NAMESPACE,
+  key: PRODUCT_MINIMUM_QUANTITY_KEY,
+  type: 'number_integer',
+  ownerType: PRODUCT_OWNER_TYPE,
+  name: 'Defines the minimum quantity that can be added to the cart'
 }
 export const PRODUCT_DISCOUNT_DISALLOWED_METAFIELD = {
   namespace: B2B_PORTAL_NAMESPACE,
@@ -179,6 +187,20 @@ export async function createDefinedMetafields(dbShop) {
       type: CUSTOMER_RESTRICTED_METAFIELD.type,
       ownerType: CUSTOMER_RESTRICTED_METAFIELD.ownerType,
       name: CUSTOMER_RESTRICTED_METAFIELD.name
+    }
+    await createIfMissing(shopifyApi, metafield, existingMetafields)
+  }
+
+  
+  if (configuration.cartConfiguration.productConfiguration.enableMinimumQuantity) {
+    log(`Minimum product quantity in cart is enabled in configuration - will create metafield if it does not already exist`)
+    const configurationMetafield = configuration.cartConfiguration.productConfiguration.minimumQuantityMetafield
+    const metafield = {
+      namespace: configurationMetafield.metafieldNamespace,
+      key: configurationMetafield.metafieldKey,
+      type: PRODUCT_MINIMUM_QUANTITY_METAFIELD.type,
+      ownerType: PRODUCT_MINIMUM_QUANTITY_METAFIELD.ownerType,
+      name: PRODUCT_MINIMUM_QUANTITY_METAFIELD.name
     }
     await createIfMissing(shopifyApi, metafield, existingMetafields)
   }

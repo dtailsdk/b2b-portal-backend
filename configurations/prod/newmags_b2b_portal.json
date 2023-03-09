@@ -46,6 +46,11 @@
       "restrictedCustomerMetafield": {
         "metafieldNamespace": "custom",
         "metafieldKey": "allow_product_group"
+      },
+      "enableMinimumQuantity": true,
+      "minimumQuantityMetafield": {
+        "metafieldNamespace": "dtails_b2b_portal",
+        "metafieldKey": "minimum_cart_quantity"
       }
     }
   },

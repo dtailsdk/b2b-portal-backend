@@ -22,7 +22,8 @@
       "enableSingleUnits": false
     },
     "productConfiguration": {
-      "enableRestrictedProducts": false
+      "enableRestrictedProducts": false,
+      "enableMinimumQuantity": false
     }
   },
   "checkoutConfiguration": {

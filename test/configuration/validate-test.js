@@ -24,7 +24,8 @@ test('When customer configuration is left out, then configuration is not valid',
         "enableSingleUnits": false
       },
       "productConfiguration": {
-        "enableRestrictedProducts": false
+        "enableRestrictedProducts": false,
+        "enableMinimumQuantity": false
       }
     },
     "checkoutConfiguration": {
@@ -56,7 +57,8 @@ test('When product configuration is left out, then configuration is not valid', 
         "enableSingleUnits": false
       },
       "productConfiguration": {
-        "enableRestrictedProducts": false
+        "enableRestrictedProducts": false,
+        "enableMinimumQuantity": false
       }
     },
     "checkoutConfiguration": {
@@ -93,7 +95,8 @@ test('When metafield definition is left out in product configuration, then confi
         "enableSingleUnits": false
       },
       "productConfiguration": {
-        "enableRestrictedProducts": false
+        "enableRestrictedProducts": false,
+        "enableMinimumQuantity": false
       }
     },
     "checkoutConfiguration": {
@@ -123,7 +126,8 @@ test('When discount configuration is left out, then configuration is not valid',
         "enableSingleUnits": false
       },
       "productConfiguration": {
-        "enableRestrictedProducts": false
+        "enableRestrictedProducts": false,
+        "enableMinimumQuantity": false
       }
     },
     "checkoutConfiguration": {
@@ -191,7 +195,8 @@ test('When checkout configuration is left out, then configuration is not valid',
         "enableSingleUnits": false
       },
       "productConfiguration": {
-        "enableRestrictedProducts": false
+        "enableRestrictedProducts": false,
+        "enableMinimumQuantity": false
       }
     }
   }
@@ -224,7 +229,8 @@ test('When customer discount is enabled but related metafield is not defined, th
         "enableSingleUnits": false
       },
       "productConfiguration": {
-        "enableRestrictedProducts": false
+        "enableRestrictedProducts": false,
+        "enableMinimumQuantity": false
       }
     },
     "checkoutConfiguration": {
@@ -262,7 +268,8 @@ test('When single unit purchase is enabled but related metafield is not defined,
         "enableSingleUnits": true,
       },
       "productConfiguration": {
-        "enableRestrictedProducts": false
+        "enableRestrictedProducts": false,
+        "enableMinimumQuantity": false
       }
     },
     "checkoutConfiguration": {
@@ -300,7 +307,8 @@ test('When minimum order configuration is enabled and fee prices are not defined
         "enableSingleUnits": false
       },
       "productConfiguration": {
-        "enableRestrictedProducts": false
+        "enableRestrictedProducts": false,
+        "enableMinimumQuantity": false
       }
     },
     "checkoutConfiguration": {
@@ -348,7 +356,8 @@ test('When minimum order configuration is enabled and minimum order amounts are 
         "enableSingleUnits": false
       },
       "productConfiguration": {
-        "enableRestrictedProducts": false
+        "enableRestrictedProducts": false,
+        "enableMinimumQuantity": false
       }
     },
     "checkoutConfiguration": {
@@ -368,8 +377,46 @@ test('When minimum order configuration is enabled and minimum order amounts are 
     }
   }
   const error = await t.throwsAsync(async () => validateConfiguration(configuration))
-  t.log('ENV->', process.env.NODE_ENV)
   t.is(error.message, 'data/checkoutConfiguration/minimumOrderFeeConfiguration must have required property \'minimumOrderPrices\'')
+})
+
+test('When minimum quantity is enabled and metafield is not defined, then configuration is not valid', async t => {
+  const configuration = {
+    "identifier": "customer_app_identifier",
+    "customerConfiguration": {
+      "enableCvr": false
+    },
+    "productConfiguration": {
+      "packageSizeMetafield": {
+        "metafieldNamespace": "dtails_b2b_portal",
+        "metafieldKey": "package_size"
+      }
+    },
+    "discountConfiguration": {
+      "customerDiscount": {
+        "enable": false
+      },
+      "productDiscount": {
+        "enable": false
+      }
+    },
+    "cartConfiguration": {
+      "customerConfiguration": {
+        "enableSingleUnits": false
+      },
+      "productConfiguration": {
+        "enableRestrictedProducts": false,
+        "enableMinimumQuantity": true
+      }
+    },
+    "checkoutConfiguration": {
+      "minimumOrderFeeConfiguration": {
+        "enable": false,
+      }
+    }
+  }
+  const error = await t.throwsAsync(async () => validateConfiguration(configuration))
+  t.is(error.message, 'data/cartConfiguration/productConfiguration must have required property \'minimumQuantityMetafield\'')
 })
 
 test('When product discount is enabled and metafield is not defined, then configuration is not valid', async t => {
@@ -397,7 +444,8 @@ test('When product discount is enabled and metafield is not defined, then config
         "enableSingleUnits": false
       },
       "productConfiguration": {
-        "enableRestrictedProducts": false
+        "enableRestrictedProducts": false,
+        "enableMinimumQuantity": false
       }
     },
     "checkoutConfiguration": {
@@ -435,7 +483,8 @@ test('When identifier is not defined, then configuration is not valid', async t 
         "enableSingleUnits": false
       },
       "productConfiguration": {
-        "enableRestrictedProducts": false
+        "enableRestrictedProducts": false,
+        "enableMinimumQuantity": false
       }
     },
     "checkoutConfiguration": {
@@ -447,6 +496,17 @@ test('When identifier is not defined, then configuration is not valid', async t 
   const error = await t.throwsAsync(async () => validateConfiguration(configuration))
   t.log('ENV->', process.env.NODE_ENV)
   t.is(error.message, 'data must have required property \'identifier\'')
+})
+
+test('When validating dev configurations, then configurations are valid', async t => {
+  const filePath = `${__dirname}/../../configurations/dev`
+  const fileNames = await fs.readdirSync(filePath)
+  for (const fileName of fileNames) {
+    const fileContent = await fs.readFile(`${filePath}/${fileName}`, { encoding: 'utf8' })
+    const configuration = JSON.parse(fileContent)
+    const isValid = await validateConfiguration(configuration)
+    t.true(isValid)
+  }
 })
 
 test('When validating test configurations, then configurations are valid', async t => {
